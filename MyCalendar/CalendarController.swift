@@ -8,7 +8,18 @@
 
 import UIKit
 
+// TODO: localization
+// TODO: accessibility
+
 class CalendarController: UIViewController {
+    private(set) lazy var titleView: UILabel = {
+        let titleView = UILabel()
+        titleView.font = UIFont.boldSystemFont(ofSize: 17)
+        titleView.textColor = titleView.tintColor   //!!!
+        titleView.isUserInteractionEnabled = true
+        titleView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(titleTapped)))
+        return titleView
+    }()
     private(set) lazy var calendarView: CalendarView = {
         let calendarView = CalendarView()
         calendarView.numberOfWeeks = 2
@@ -22,6 +33,9 @@ class CalendarController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         initLayout()
+        
+        titleView.text = "March 2018"   //!!!
+        navigationItem.titleView = titleView
     }
     
     private func initLayout() {
@@ -32,5 +46,9 @@ class CalendarController: UIViewController {
         
         container.addArrangedSubview(calendarView)
         container.addArrangedSubview(agendaView)
+    }
+    
+    @objc private func titleTapped() {
+        calendarView.setNumberOfWeeks(calendarView.numberOfWeeks == 2 ? 5 : 2, animated: true)
     }
 }

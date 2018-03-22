@@ -22,17 +22,22 @@ class CalendarView: UICollectionView {
             numberOfWeeks = max(1, numberOfWeeks)
             if numberOfWeeks != oldValue {
                 //!!!
+                invalidateIntrinsicContentSize()
             }
         }
     }
     
     override var intrinsicContentSize: CGSize {
         //!!!
-        return CGSize(width: UIViewNoIntrinsicMetric, height: 200)
+        return CGSize(width: UIViewNoIntrinsicMetric, height: CGFloat(numberOfWeeks) * 40)
     }
     
     func setNumberOfWeeks(_ numberOfWeeks: Int, animated: Bool) {
-        //!!! add animation
         self.numberOfWeeks = numberOfWeeks
+        if animated {
+            UIView.animate(withDuration: 0.2) {
+                self.superview?.layoutIfNeeded()
+            }
+        }
     }
 }
