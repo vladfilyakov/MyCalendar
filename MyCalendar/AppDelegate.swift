@@ -14,6 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         initLayout()
+        initAppearance()
         return true
     }
     
@@ -24,5 +25,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let controller = CalendarController()
         let container = UINavigationController(rootViewController: controller)
         window?.rootViewController = container
+    }
+    
+    private func initAppearance() {
+        UINavigationBar.appearance().isTranslucent = false
     }
 }
