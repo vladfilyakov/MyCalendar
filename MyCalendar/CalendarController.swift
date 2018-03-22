@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  CalendarController.swift
 //  MyCalendar
 //
 //  Created by Vladislav Filyakov on 3/21/18.
