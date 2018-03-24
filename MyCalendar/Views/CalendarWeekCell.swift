@@ -13,8 +13,10 @@ class CalendarWeekCell: UITableViewCell {
     
     static var height: CGFloat {
         // TODO: Support Large Fonts
-        return UIScreen.main.roundToDevicePixels(14 + UIFont.systemFont(ofSize: 17).lineHeight + 14)
+        return UIScreen.main.roundToDevicePixels(14 + dayTextFont.lineHeight + 14)
     }
+    
+    static let dayTextFont = UIFont.systemFont(ofSize: 17)
     
     static let dayTextColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
     static let monthBackgroundColor1 = UIColor.white
@@ -41,7 +43,7 @@ class CalendarWeekCell: UITableViewCell {
         var weekDayViews = [UILabel]()
         for day in 0..<7 {
             let label = UILabel()
-            label.font = UIFont.systemFont(ofSize: 17)
+            label.font = CalendarWeekCell.dayTextFont
             label.textAlignment = .center
             label.textColor = CalendarWeekCell.dayTextColor
             weekDayViews.append(label)
