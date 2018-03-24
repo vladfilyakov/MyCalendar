@@ -30,7 +30,10 @@ class CalendarView: UIView {
     
     override var intrinsicContentSize: CGSize {
         //!!!
-        return CGSize(width: UIViewNoIntrinsicMetric, height: CGFloat(numberOfWeeks) * 40)
+        return CGSize(
+            width: UIViewNoIntrinsicMetric,
+            height: headerView.intrinsicContentSize.height + CGFloat(numberOfWeeks) * dayView.rowHeight
+        )
     }
     
     private let minDate: Date = Calendar.current.startOfWeek(for: Date().addingDays(3000))
@@ -43,6 +46,8 @@ class CalendarView: UIView {
     private lazy var dayView: UITableView = {
         let dayView = UITableView(frame: .zero, style: .plain)
         dayView.allowsSelection = false
+        dayView.rowHeight = CalendarCell.height
+        dayView.separatorColor = CalendarCell.separatorColor
         dayView.separatorInset = .zero
         dayView.dataSource = self
         dayView.delegate = self

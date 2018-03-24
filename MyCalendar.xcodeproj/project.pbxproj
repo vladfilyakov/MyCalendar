@@ -17,6 +17,7 @@
 		A592987F2064E220005E1F4D /* CalendarHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A592987E2064E220005E1F4D /* CalendarHeaderView.swift */; };
 		A59298822064ECE6005E1F4D /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59298812064ECE6005E1F4D /* Date+Extension.swift */; };
 		A59298842064ED07005E1F4D /* Calendar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59298832064ED07005E1F4D /* Calendar+Extension.swift */; };
+		A592988B20663589005E1F4D /* UIScreen+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A592988A20663589005E1F4D /* UIScreen+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		A592987E2064E220005E1F4D /* CalendarHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarHeaderView.swift; sourceTree = "<group>"; };
 		A59298812064ECE6005E1F4D /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		A59298832064ED07005E1F4D /* Calendar+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Calendar+Extension.swift"; sourceTree = "<group>"; };
+		A592988A20663589005E1F4D /* UIScreen+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScreen+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +122,7 @@
 			children = (
 				A59298832064ED07005E1F4D /* Calendar+Extension.swift */,
 				A59298812064ECE6005E1F4D /* Date+Extension.swift */,
+				A592988A20663589005E1F4D /* UIScreen+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -227,6 +230,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A59298842064ED07005E1F4D /* Calendar+Extension.swift in Sources */,
+				A592988B20663589005E1F4D /* UIScreen+Extension.swift in Sources */,
 				A54A394F20637F6A00CA6EBD /* CalendarController.swift in Sources */,
 				A592987D2064DF7A005E1F4D /* CalendarCell.swift in Sources */,
 				A54A394D20637F6A00CA6EBD /* AppDelegate.swift in Sources */,

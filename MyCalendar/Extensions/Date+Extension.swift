@@ -10,6 +10,7 @@ import Foundation
 
 extension Date {
     func addingDays(_ days: Int) -> Date {
-        return addingTimeInterval(TimeInterval(days * 24 * 60 * 60))
+//        return addingTimeInterval(TimeInterval(days * 24 * 60 * 60))
+        return Calendar.current.date(byAdding: .day, value: days, to: self)!
     }
 }
