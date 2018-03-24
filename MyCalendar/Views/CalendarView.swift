@@ -36,7 +36,7 @@ class CalendarView: UIView {
         )
     }
     
-    private let minDate: Date = Calendar.current.startOfWeek(for: Date().addingDays(3000))
+    private let minDate: Date = Calendar.current.startOfWeek(for: Date().addingDays(-3000))
     
     private lazy var container: UIStackView = {
         let container = UIStackView()
@@ -78,6 +78,10 @@ class CalendarView: UIView {
 }
 
 extension CalendarView: UITableViewDataSource, UITableViewDelegate {
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        targetContentOffset.pointee.y = round(targetContentOffset.pointee.y / dayView.rowHeight) * dayView.rowHeight
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Outlook Mobile goes back about 3000 days and forward about 653
         return (3000 + 3000) / 7

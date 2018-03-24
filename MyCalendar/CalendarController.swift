@@ -23,6 +23,7 @@ class CalendarController: UIViewController {
     private(set) lazy var calendarView: CalendarView = {
         let calendarView = CalendarView()
         calendarView.numberOfWeeks = 2
+        calendarView.addSubview(createBottomSeparator(for: calendarView))
         return calendarView
     }()
     private(set) lazy var agendaView: UITableView = {
@@ -46,6 +47,18 @@ class CalendarController: UIViewController {
         
         container.addArrangedSubview(calendarView)
         container.addArrangedSubview(agendaView)
+    }
+    
+    private func createBottomSeparator(for view: UIView) -> UIView {
+        var frame = view.bounds
+        frame.origin.y = frame.maxY - UIScreen.main.devicePixel
+        frame.size.height = UIScreen.main.devicePixel
+        
+        let separator = UIView(frame: frame)
+        separator.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
+        separator.backgroundColor = CalendarWeekCell.separatorColor
+        separator.isUserInteractionEnabled = false
+        return separator
     }
     
     @objc private func titleTapped() {

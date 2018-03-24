@@ -9,6 +9,8 @@
 import UIKit
 
 extension UIScreen {
+    var devicePixel: CGFloat { return 1 / scale }
+    
     func roundToDevicePixels(_ value: CGFloat) -> CGFloat {
         return ceil(value * scale) / scale
     }
