@@ -46,12 +46,12 @@ class CalendarView: UIView {
     private lazy var dayView: UITableView = {
         let dayView = UITableView(frame: .zero, style: .plain)
         dayView.allowsSelection = false
-        dayView.rowHeight = CalendarCell.height
-        dayView.separatorColor = CalendarCell.separatorColor
+        dayView.rowHeight = CalendarWeekCell.height
+        dayView.separatorColor = CalendarWeekCell.separatorColor
         dayView.separatorInset = .zero
         dayView.dataSource = self
         dayView.delegate = self
-        dayView.register(CalendarCell.self, forCellReuseIdentifier: CalendarCell.identifier)
+        dayView.register(CalendarWeekCell.self, forCellReuseIdentifier: CalendarWeekCell.identifier)
         return dayView
     }()
     private lazy var headerView: CalendarHeaderView = {
@@ -84,7 +84,7 @@ extension CalendarView: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: CalendarCell.identifier, for: indexPath) as! CalendarCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: CalendarWeekCell.identifier, for: indexPath) as! CalendarWeekCell
         cell.weekStartDate = minDate.addingDays(indexPath.row * 7)
         return cell
     }

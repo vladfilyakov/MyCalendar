@@ -1,5 +1,5 @@
 //
-//  CalendarCell.swift
+//  CalendarWeekCell.swift
 //  MyCalendar
 //
 //  Created by Vladislav Filyakov on 3/23/18.
@@ -8,8 +8,8 @@
 
 import UIKit
 
-class CalendarCell: UITableViewCell {
-    static let identifier = "CalendarCell"
+class CalendarWeekCell: UITableViewCell {
+    static let identifier = "CalendarWeekCell"
     
     static var height: CGFloat {
         // TODO: Support Large Fonts
@@ -43,7 +43,7 @@ class CalendarCell: UITableViewCell {
             let label = UILabel()
             label.font = UIFont.systemFont(ofSize: 17)
             label.textAlignment = .center
-            label.textColor = CalendarCell.dayTextColor
+            label.textColor = CalendarWeekCell.dayTextColor
             weekDayViews.append(label)
         }
         return weekDayViews
@@ -72,6 +72,6 @@ class CalendarCell: UITableViewCell {
     }
     
     private func backgroundColor(for month: Int) -> UIColor {
-        return month % 2 == 1 ? CalendarCell.monthBackgroundColor1 : CalendarCell.monthBackgroundColor2
+        return month % 2 == 1 ? CalendarWeekCell.monthBackgroundColor1 : CalendarWeekCell.monthBackgroundColor2
     }
 }
