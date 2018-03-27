@@ -11,16 +11,8 @@ import UIKit
 class CalendarWeekCell: UITableViewCell {
     static let identifier = "CalendarWeekCell"
     
-    static var height: CGFloat {
-        // TODO: Support Large Fonts
-        return UIScreen.main.roundToDevicePixels(14 + dayTextFont.lineHeight + 14)
-    }
+    static var height: CGFloat { return CalendarDayView.height }
     
-    static let dayTextFont = UIFont.systemFont(ofSize: 17)
-    
-    static let dayTextColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
-    static let monthBackgroundColor1 = UIColor.white
-    static let monthBackgroundColor2 = UIColor(red: 0.97, green: 0.97, blue: 0.98, alpha: 1)
     static let separatorColor = UIColor(red: 0.88, green: 0.88, blue: 0.89, alpha: 1)
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -39,14 +31,10 @@ class CalendarWeekCell: UITableViewCell {
         }
     }
     
-    private var weekDayViews: [UILabel] = {
-        var weekDayViews = [UILabel]()
+    private let weekDayViews: [CalendarDayView] = {
+        var weekDayViews = [CalendarDayView]()
         for day in 0..<7 {
-            let label = UILabel()
-            label.font = CalendarWeekCell.dayTextFont
-            label.textAlignment = .center
-            label.textColor = CalendarWeekCell.dayTextColor
-            weekDayViews.append(label)
+            weekDayViews.append(CalendarDayView())
         }
         return weekDayViews
     }()
@@ -62,18 +50,7 @@ class CalendarWeekCell: UITableViewCell {
     
     private func updateViews() {
         for i in 0..<7 {
-            let date = weekStartDate.addingDays(i)
-            let dateComponents = Calendar.current.dateComponents([.day, .month], from: date)
-            weekDayViews[i].text = displayTextForDay(dateComponents.day!)
-            weekDayViews[i].backgroundColor = backgroundColor(for: dateComponents.month!)
+            weekDayViews[i].date = weekStartDate.addingDays(i)
         }
-    }
-    
-    private func displayTextForDay(_ day: Int) -> String {
-        return NumberFormatter.localizedString(from: NSNumber(value: day), number: .none)
-    }
-    
-    private func backgroundColor(for month: Int) -> UIColor {
-        return month % 2 == 1 ? CalendarWeekCell.monthBackgroundColor1 : CalendarWeekCell.monthBackgroundColor2
     }
 }
