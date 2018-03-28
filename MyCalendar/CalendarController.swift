@@ -35,18 +35,18 @@ class CalendarController: UIViewController {
         super.viewDidLoad()
         initLayout()
         
+        // Hiding navigation bar's bottom shadow to get a "merged" with calendar header look
+        navigationController?.navigationBar.shadowImage = UIImage()
+        
         titleView.text = "March 2018"   //!!!
         navigationItem.titleView = titleView
     }
     
     private func initLayout() {
-        let container = UIStackView(frame: view.bounds)
-        container.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        let container = UIStackView(arrangedSubviews: [calendarView, agendaView])
         container.axis = .vertical
         view.addSubview(container)
-        
-        container.addArrangedSubview(calendarView)
-        container.addArrangedSubview(agendaView)
+        container.fitIntoSuperview()
     }
     
     private func createBottomSeparator(for view: UIView) -> UIView {

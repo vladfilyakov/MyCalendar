@@ -9,9 +9,10 @@
 import UIKit
 
 class CalendarDayView: UIView {
+    static let dayTextVerticalMargin: CGFloat = 14
     static var height: CGFloat {
         // TODO: Support Large Fonts
-        return UIScreen.main.roundToDevicePixels(14 + dayTextFont.lineHeight + 14)
+        return UIScreen.main.roundToDevicePixels(2 * dayTextVerticalMargin + dayTextFont.lineHeight)
     }
     
     static let dayTextFont = UIFont.systemFont(ofSize: 17)

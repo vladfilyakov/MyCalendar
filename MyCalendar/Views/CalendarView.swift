@@ -11,7 +11,6 @@ import UIKit
 class CalendarView: UIView {
     override init(frame: CGRect) {
         super.init(frame: .zero)
-        backgroundColor = .orange   //!!!
         initLayout()
     }
     required init?(coder aDecoder: NSCoder) {
@@ -68,9 +67,8 @@ class CalendarView: UIView {
     }
     
     private func initLayout() {
-        container.frame = bounds
-        container.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         addSubview(container)
+        container.fitIntoSuperview()
         
         container.addArrangedSubview(headerView)
         container.addArrangedSubview(dayView)

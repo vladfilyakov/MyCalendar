@@ -19,6 +19,7 @@
 		A59298842064ED07005E1F4D /* Calendar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59298832064ED07005E1F4D /* Calendar+Extension.swift */; };
 		A592988B20663589005E1F4D /* UIScreen+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A592988A20663589005E1F4D /* UIScreen+Extension.swift */; };
 		A592988F206A36AE005E1F4D /* CalendarDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A592988E206A36AE005E1F4D /* CalendarDayView.swift */; };
+		A5DFCB5B206B65960093D9F2 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5DFCB5A206B65960093D9F2 /* UIView+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		A59298832064ED07005E1F4D /* Calendar+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Calendar+Extension.swift"; sourceTree = "<group>"; };
 		A592988A20663589005E1F4D /* UIScreen+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScreen+Extension.swift"; sourceTree = "<group>"; };
 		A592988E206A36AE005E1F4D /* CalendarDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarDayView.swift; sourceTree = "<group>"; };
+		A5DFCB5A206B65960093D9F2 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +128,7 @@
 				A59298832064ED07005E1F4D /* Calendar+Extension.swift */,
 				A59298812064ECE6005E1F4D /* Date+Extension.swift */,
 				A592988A20663589005E1F4D /* UIScreen+Extension.swift */,
+				A5DFCB5A206B65960093D9F2 /* UIView+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -240,6 +243,7 @@
 				A592987F2064E220005E1F4D /* CalendarHeaderView.swift in Sources */,
 				A592988F206A36AE005E1F4D /* CalendarDayView.swift in Sources */,
 				A54A396E2063886200CA6EBD /* CalendarView.swift in Sources */,
+				A5DFCB5B206B65960093D9F2 /* UIView+Extension.swift in Sources */,
 				A59298822064ECE6005E1F4D /* Date+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
