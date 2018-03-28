@@ -13,4 +13,7 @@ extension Date {
 //        return addingTimeInterval(TimeInterval(days * 24 * 60 * 60))
         return Calendar.current.date(byAdding: .day, value: days, to: self)!
     }
+    func daysSince(_ date: Date) -> Double {
+        return timeIntervalSince(date) / (24 * 60 * 60)
+    }
 }

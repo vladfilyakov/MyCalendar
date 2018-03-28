@@ -10,6 +10,11 @@ import UIKit
 
 class CalendarView: UIView {
     override init(frame: CGRect) {
+        // Outlook Mobile goes back about 3000 days and forward about 653
+        let today = Date()
+        minDate = Calendar.current.startOfWeek(for: today.addingDays(-3000))
+        pastWeeks = Int(Calendar.current.startOfWeek(for: today).daysSince(minDate) / 7)
+        futureWeeks = pastWeeks
         super.init(frame: .zero)
         initLayout()
     }
@@ -21,24 +26,24 @@ class CalendarView: UIView {
         didSet {
             numberOfWeeks = max(1, numberOfWeeks)
             if numberOfWeeks != oldValue {
-                //!!!
                 invalidateIntrinsicContentSize()
             }
         }
     }
     
     override var intrinsicContentSize: CGSize {
-        //!!!
         return CGSize(
             width: UIViewNoIntrinsicMetric,
             height: headerView.intrinsicContentSize.height + CGFloat(numberOfWeeks) * dayView.rowHeight
         )
     }
     
-    private let minDate: Date = Calendar.current.startOfWeek(for: Date().addingDays(-3000))
+    let minDate: Date
+    private let pastWeeks: Int
+    private let futureWeeks: Int
     
     private lazy var container: UIStackView = {
-        let container = UIStackView()
+        let container = UIStackView(arrangedSubviews: [headerView, dayView])
         container.axis = .vertical
         return container
     }()
@@ -53,9 +58,7 @@ class CalendarView: UIView {
         dayView.register(CalendarWeekCell.self, forCellReuseIdentifier: CalendarWeekCell.identifier)
         return dayView
     }()
-    private lazy var headerView: CalendarHeaderView = {
-        return CalendarHeaderView()
-    }()
+    private let headerView: CalendarHeaderView = CalendarHeaderView()
     
     func setNumberOfWeeks(_ numberOfWeeks: Int, animated: Bool) {
         self.numberOfWeeks = numberOfWeeks
@@ -69,9 +72,6 @@ class CalendarView: UIView {
     private func initLayout() {
         addSubview(container)
         container.fitIntoSuperview()
-        
-        container.addArrangedSubview(headerView)
-        container.addArrangedSubview(dayView)
     }
 }
 
@@ -81,8 +81,7 @@ extension CalendarView: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // Outlook Mobile goes back about 3000 days and forward about 653
-        return (3000 + 3000) / 7
+        return pastWeeks + 1 + futureWeeks
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

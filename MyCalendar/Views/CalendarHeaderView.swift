@@ -28,6 +28,7 @@ class CalendarHeaderView: UIView {
     }
     
     override var intrinsicContentSize: CGSize {
+        // TODO: Support Large Fonts
         return CGSize(
             width: UIViewNoIntrinsicMetric,
             height: 2 * CalendarHeaderView.dayLabelVerticalMargin +
