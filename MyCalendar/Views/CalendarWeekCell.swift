@@ -11,8 +11,13 @@ import UIKit
 class CalendarWeekCell: UITableViewCell {
     static let identifier = "CalendarWeekCell"
     
-    static var height: CGFloat { return CalendarDayView.height }
-    
+    static var height: CGFloat {
+        // Outlook has a fixed cell height
+        //return CalendarDayView.height + separatorThickness
+        return 48
+    }
+    //private static let separatorThickness = UIScreen.main.devicePixel
+
     static let separatorColor = UIColor(red: 0.88, green: 0.88, blue: 0.89, alpha: 1)
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -40,12 +45,12 @@ class CalendarWeekCell: UITableViewCell {
     }()
     
     private func initLayout() {
-        let container = UIStackView(arrangedSubviews: weekDayViews)
-        container.axis = .horizontal
-        container.distribution = .fillEqually
-        container.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        container.frame = contentView.bounds
-        contentView.addSubview(container)
+        weekDayViews.forEach { addSubview($0) }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        fitSubviewsHorizontally(weekDayViews)
     }
     
     private func updateViews() {

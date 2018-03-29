@@ -19,4 +19,14 @@ extension UIView {
         topAnchor.constraint(equalTo: container.topAnchor).isActive = true
         bottomAnchor.constraint(equalTo: container.bottomAnchor).isActive = true
     }
+    
+    func fitSubviewsHorizontally(_ subviews: [UIView]) {
+        var frame = bounds
+        for i in 0..<subviews.count {
+            let offset = UIScreen.main.roundToDevicePixels(CGFloat(i + 1) / CGFloat(subviews.count) * bounds.width)
+            frame.size.width = offset - frame.origin.x
+            subviews[i].frame = frame
+            frame.origin.x = frame.maxX
+        }
+    }
 }

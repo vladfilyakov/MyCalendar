@@ -10,7 +10,7 @@ import UIKit
 
 class CalendarView: UIView {
     override init(frame: CGRect) {
-        // Outlook Mobile goes back about 3000 days and forward about 653
+        // Outlook goes back about 3000 days and forward about 653
         let today = Date()
         minDate = Calendar.current.startOfWeek(for: today.addingDays(-3000))
         pastWeeks = Int(Calendar.current.startOfWeek(for: today).daysSince(minDate) / 7)
@@ -34,7 +34,7 @@ class CalendarView: UIView {
     override var intrinsicContentSize: CGSize {
         return CGSize(
             width: UIViewNoIntrinsicMetric,
-            height: headerView.intrinsicContentSize.height + CGFloat(numberOfWeeks) * dayView.rowHeight
+            height: CalendarHeaderView.height + CGFloat(numberOfWeeks) * dayView.rowHeight
         )
     }
     
@@ -42,11 +42,6 @@ class CalendarView: UIView {
     private let pastWeeks: Int
     private let futureWeeks: Int
     
-    private lazy var container: UIStackView = {
-        let container = UIStackView(arrangedSubviews: [headerView, dayView])
-        container.axis = .vertical
-        return container
-    }()
     private lazy var dayView: UITableView = {
         let dayView = UITableView(frame: .zero, style: .plain)
         dayView.allowsSelection = false
@@ -70,8 +65,28 @@ class CalendarView: UIView {
     }
     
     private func initLayout() {
-        addSubview(container)
-        container.fitIntoSuperview()
+        addSubview(dayView)
+        // headerView should after after dayView because it needs to show a separator/shadow over dayView
+        addSubview(headerView)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        headerView.frame = frameForHeaderView()
+        dayView.frame = frameForDayView()
+    }
+    
+    private func frameForHeaderView() -> CGRect {
+        var frame = bounds
+        frame.size.height = CalendarHeaderView.height
+        return frame
+    }
+    
+    private func frameForDayView() -> CGRect {
+        var frame = bounds
+        frame.origin.y += CalendarHeaderView.height
+        frame.size.height -= CalendarHeaderView.height
+        return frame
     }
 }
 

@@ -9,14 +9,19 @@
 import UIKit
 
 class CalendarHeaderView: UIView {
-    static let dayLabelVerticalMargin: CGFloat = 6
-    static let separatorThickness = UIScreen.main.devicePixel
+    //private static let dayLabelVerticalMargin: CGFloat = 6
+    static var height: CGFloat {
+        // Outlook has a fixed header height
+        //return 2 * dayLabelVerticalMargin + UIScreen.main.roundToDevicePixels(dayLabelFont.lineHeight) + separatorThickness
+        return 26
+    }
+    private static let separatorThickness = UIScreen.main.devicePixel
     
-    static let dayLabelFont = UIFont.systemFont(ofSize: 12)
+    private static let dayLabelFont = UIFont.systemFont(ofSize: 12)
 
-    static let dayLabelBackgroundColor = UIColor.white
-    static let dayLabelTextColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
-    static let separatorColor = UIColor(red: 0.82, green: 0.83, blue: 0.83, alpha: 1)
+    private static let dayLabelBackgroundColor = UIColor.white
+    private static let dayLabelTextColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
+    private static let separatorColor = UIColor(white: 0, alpha: 0.18)
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -27,27 +32,6 @@ class CalendarHeaderView: UIView {
         fatalError("Not implemented")
     }
     
-    override var intrinsicContentSize: CGSize {
-        // TODO: Support Large Fonts
-        return CGSize(
-            width: UIViewNoIntrinsicMetric,
-            height: 2 * CalendarHeaderView.dayLabelVerticalMargin +
-                UIScreen.main.roundToDevicePixels(CalendarHeaderView.dayLabelFont.lineHeight) +
-                CalendarHeaderView.separatorThickness
-        )
-    }
-    
-    private lazy var container: UIStackView = {
-        let container = UIStackView(arrangedSubviews: [dayLabelContainer, separator])
-        container.axis = .vertical
-        return container
-    }()
-    private lazy var dayLabelContainer: UIStackView = {
-        let container = UIStackView(arrangedSubviews: dayLabels)
-        container.axis = .horizontal
-        container.distribution = .fillEqually
-        return container
-    }()
     private let dayLabels: [UILabel] = {
         var dayLabels = [UILabel]()
         for i in 0..<7 {
@@ -62,13 +46,25 @@ class CalendarHeaderView: UIView {
     }()
     private let separator: UIView = {
         let separator = UIView()
-        separator.heightAnchor.constraint(equalToConstant: CalendarHeaderView.separatorThickness).isActive = true
         separator.backgroundColor = CalendarHeaderView.separatorColor
         return separator
     }()
     
     private func initLayout() {
-        addSubview(container)
-        container.fitIntoSuperview()
+        dayLabels.forEach { addSubview($0) }
+        addSubview(separator)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        fitSubviewsHorizontally(dayLabels)
+        separator.frame = frameForSeparator()
+    }
+    
+    private func frameForSeparator() -> CGRect {
+        var frame = bounds
+        frame.origin.y = frame.maxY
+        frame.size.height = CalendarHeaderView.separatorThickness
+        return frame
     }
 }

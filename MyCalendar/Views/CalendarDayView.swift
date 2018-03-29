@@ -9,19 +9,25 @@
 import UIKit
 
 class CalendarDayView: UIView {
-    static let dayTextVerticalMargin: CGFloat = 14
-    static var height: CGFloat {
-        // TODO: Support Large Fonts
-        return UIScreen.main.roundToDevicePixels(2 * dayTextVerticalMargin + dayTextFont.lineHeight)
-    }
+//    private static let dayTextVerticalMargin: CGFloat = 14
+//    static var height: CGFloat {
+//        // TODO: Support Large Fonts
+//        return UIScreen.main.roundToDevicePixels(2 * dayTextVerticalMargin + dayTextFont.lineHeight)
+//    }
     
-    static let dayTextFont = UIFont.systemFont(ofSize: 17)
-    static let monthTextFont = UIFont.systemFont(ofSize: 13)
-    static let yearTextFont = UIFont.systemFont(ofSize: 13)
+    private static let dayTextFont = UIFont.systemFont(ofSize: 17)
+    private static let monthTextFont = UIFont.systemFont(ofSize: 13)
+    private static let yearTextFont = UIFont.systemFont(ofSize: 13)
     
-    static let dayTextColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
-    static let monthBackgroundColor1 = UIColor.white
-    static let monthBackgroundColor2 = UIColor(red: 0.97, green: 0.97, blue: 0.98, alpha: 1)
+    private static let dayTextColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
+    private static let monthBackgroundColor1 = UIColor.white
+    private static let monthBackgroundColor2 = UIColor(red: 0.97, green: 0.97, blue: 0.98, alpha: 1)
+    
+    private static let numberFormatter: NumberFormatter = {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .none
+        return numberFormatter
+    }()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -72,7 +78,7 @@ class CalendarDayView: UIView {
     }
     
     private func displayTextForDay(_ day: Int) -> String {
-        return NumberFormatter.localizedString(from: NSNumber(value: day), number: .none)
+        return CalendarDayView.numberFormatter.string(from: NSNumber(value: day))!
     }
     
     private func displayTextForMonth(_ month: Int) -> String {
@@ -80,7 +86,7 @@ class CalendarDayView: UIView {
     }
     
     private func displayTextForYear(_ year: Int) -> String {
-        return NumberFormatter.localizedString(from: NSNumber(value: year), number: .none)
+        return CalendarDayView.numberFormatter.string(from: NSNumber(value: year))!
     }
 
     private func initLayout() {
