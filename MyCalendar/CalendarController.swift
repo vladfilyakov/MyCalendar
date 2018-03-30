@@ -43,6 +43,9 @@ class CalendarController: UIViewController {
         
         titleView.text = "March 2018"   //!!!
         navigationItem.titleView = titleView
+        
+        //!!!
+        calendarView.selectedDate = Date()
     }
     
     private func initLayout() {

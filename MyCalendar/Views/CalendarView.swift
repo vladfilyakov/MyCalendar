@@ -16,8 +16,10 @@ class CalendarView: UIView {
         // Outlook goes back about 3000 days and forward about 653
         let today = Date()
         minDate = Calendar.current.startOfWeek(for: today.addingDays(-3000))
-        pastWeeks = Int(Calendar.current.startOfWeek(for: today).daysSince(minDate) / 7)
-        futureWeeks = pastWeeks
+        let pastWeeks = Int(Calendar.current.startOfWeek(for: today).daysSince(minDate) / 7)
+        let futureWeeks = pastWeeks
+        totalWeeks = pastWeeks + 1 + futureWeeks
+        maxDate = minDate.addingDays(totalWeeks * 7 - 1)
         super.init(frame: .zero)
         initLayout()
     }
@@ -33,6 +35,20 @@ class CalendarView: UIView {
             }
         }
     }
+    var selectedDate: Date? {
+        didSet {
+            if let date = selectedDate {
+                selectedDate = Calendar.current.startOfDay(for: date)
+            }
+            if selectedDate == oldValue {
+                return
+            }
+            //!!!
+            if let date = selectedDate, let indexPath = indexPath(for: date) {
+                dayView.scrollToRow(at: indexPath, at: .top, animated: false)
+            }
+        }
+    }
     
     override var intrinsicContentSize: CGSize {
         return CGSize(
@@ -42,8 +58,8 @@ class CalendarView: UIView {
     }
     
     let minDate: Date
-    private let pastWeeks: Int
-    private let futureWeeks: Int
+    let maxDate: Date
+    private let totalWeeks: Int
     
     private lazy var dayView: UITableView = {
         let dayView = UITableView(frame: .zero, style: .plain)
@@ -69,7 +85,7 @@ class CalendarView: UIView {
     
     private func initLayout() {
         addSubview(dayView)
-        // headerView should after after dayView because it needs to show a separator/shadow over dayView
+        // headerView should be after dayView because it needs to show a separator/shadow over dayView
         addSubview(headerView)
     }
     
@@ -99,12 +115,21 @@ extension CalendarView: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return pastWeeks + 1 + futureWeeks
+        return totalWeeks
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CalendarWeekCell.identifier, for: indexPath) as! CalendarWeekCell
-        cell.weekStartDate = minDate.addingDays(indexPath.row * 7)
+        cell.initialize(weekStartDate: minDate.addingDays(indexPath.row * 7), selectedDate: selectedDate)
         return cell
+    }
+    
+    private func indexPath(for date: Date) -> IndexPath? {
+        let startOfWeek = Calendar.current.startOfWeek(for: date)
+        if startOfWeek < minDate || startOfWeek > maxDate {
+            return nil
+        }
+        let week = Int(startOfWeek.daysSince(minDate) / 7)
+        return IndexPath(row: week, section: 0)
     }
 }

@@ -28,34 +28,28 @@ class CalendarWeekCell: UITableViewCell {
         fatalError("Not implemented")
     }
     
-    var weekStartDate: Date! {
-        didSet {
-            if weekStartDate != oldValue {
-                updateViews()
-            }
+    private let dayViews: [CalendarDayView] = {
+        var dayViews = [CalendarDayView]()
+        for day in 0..<7 {
+            dayViews.append(CalendarDayView())
+        }
+        return dayViews
+    }()
+    
+    func initialize(weekStartDate: Date, selectedDate: Date?) {
+        for i in 0..<dayViews.count {
+            let dayView = dayViews[i]
+            dayView.date = weekStartDate.addingDays(i)
+            dayView.isSelected = dayView.date == selectedDate
         }
     }
     
-    private let weekDayViews: [CalendarDayView] = {
-        var weekDayViews = [CalendarDayView]()
-        for day in 0..<7 {
-            weekDayViews.append(CalendarDayView())
-        }
-        return weekDayViews
-    }()
-    
     private func initLayout() {
-        weekDayViews.forEach { addSubview($0) }
+        dayViews.forEach { contentView.addSubview($0) }
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        fitSubviewsHorizontally(weekDayViews)
-    }
-    
-    private func updateViews() {
-        for i in 0..<7 {
-            weekDayViews[i].date = weekStartDate.addingDays(i)
-        }
+        contentView.fitSubviewsHorizontally(dayViews)
     }
 }
