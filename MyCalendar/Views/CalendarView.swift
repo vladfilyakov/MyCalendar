@@ -8,6 +8,9 @@
 
 import UIKit
 
+// TODO: Semi-transparent cover with month information - is this really needed for our scenario? Do people scroll far from today?
+// TODO: Highlight today when not selected
+
 class CalendarView: UIView {
     override init(frame: CGRect) {
         // Outlook goes back about 3000 days and forward about 653

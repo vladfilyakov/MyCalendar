@@ -14,15 +14,19 @@ class CalendarDayView: UIView {
 //        // TODO: Support Large Fonts
 //        return UIScreen.main.roundToDevicePixels(2 * dayTextVerticalMargin + dayTextFont.lineHeight)
 //    }
+    private static let selectionIndicatorMargin: CGFloat = 5
     
     private static let dayTextFont = UIFont.systemFont(ofSize: 17)
     private static let monthTextFont = UIFont.systemFont(ofSize: 13)
     private static let yearTextFont = UIFont.systemFont(ofSize: 13)
     
-    private static let dayTextColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
-    private static let monthBackgroundColor1 = UIColor.white
-    private static let monthBackgroundColor2 = UIColor(red: 0.97, green: 0.97, blue: 0.98, alpha: 1)
-    
+    private static let backgroundColor1 = UIColor.white
+    private static let backgroundColor2 = UIColor(red: 0.97, green: 0.97, blue: 0.98, alpha: 1)
+    private static let highlightBackgroundColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
+    private static let selectionBackgroundColor = UIColor(red: 0, green: 0.47, blue: 0.85, alpha: 1)
+    private static let selectionTextColor = UIColor.white
+    private static let textColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
+
     private static let numberFormatter: NumberFormatter = {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .none
@@ -44,8 +48,23 @@ class CalendarDayView: UIView {
             }
         }
     }
+    var isSelected: Bool = false {
+        didSet {
+            if isSelected != oldValue {
+                updateView()
+            }
+        }
+    }
     
-    private lazy var container: UIStackView = {
+    private var isHighlighted: Bool = false {
+        didSet {
+            if isHighlighted != oldValue {
+                updateView()
+            }
+        }
+    }
+    
+    private lazy var labelContainer: UIStackView = {
         let container = UIStackView(arrangedSubviews: [monthLabel, dayLabel, yearLabel])
         container.axis = .vertical
         container.distribution = .fillEqually
@@ -55,26 +74,64 @@ class CalendarDayView: UIView {
         let label = UILabel()
         label.font = CalendarDayView.dayTextFont
         label.textAlignment = .center
-        label.textColor = CalendarDayView.dayTextColor
+        label.textColor = CalendarDayView.textColor
         return label
     }()
     private let monthLabel: UILabel = {
         let label = UILabel()
         label.font = CalendarDayView.monthTextFont
         label.textAlignment = .center
-        label.textColor = CalendarDayView.dayTextColor
+        label.textColor = CalendarDayView.textColor
         return label
     }()
     private let yearLabel: UILabel = {
         let label = UILabel()
         label.font = CalendarDayView.yearTextFont
         label.textAlignment = .center
-        label.textColor = CalendarDayView.dayTextColor
+        label.textColor = CalendarDayView.textColor
         return label
     }()
+    private var selectionIndicator: UIView? {
+        didSet {
+            oldValue?.removeFromSuperview()
+            if let indicator = selectionIndicator {
+                insertSubview(indicator, at: 0)
+                indicator.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+                indicator.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+            }
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        isHighlighted = true
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        //!!!
+//        isSelected = true
+        isSelected = !isSelected
+        isHighlighted = false
+    }
+    
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesCancelled(touches, with: event)
+        isHighlighted = false
+    }
     
     private func backgroundColorForMonth(_ month: Int) -> UIColor {
-        return month % 2 == 1 ? CalendarDayView.monthBackgroundColor1 : CalendarDayView.monthBackgroundColor2
+        return month % 2 == 1 ? CalendarDayView.backgroundColor1 : CalendarDayView.backgroundColor2
+    }
+    
+    private func createSelectionIndicator() -> UIView {
+        let indicator = UIView()
+        let radius = UIScreen.main.roundToDevicePixels((min(bounds.width, bounds.height) - 2 * CalendarDayView.selectionIndicatorMargin) / 2)
+        indicator.layer.cornerRadius = radius
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.widthAnchor.constraint(equalToConstant: 2 * radius).isActive = true
+        indicator.heightAnchor.constraint(equalTo: indicator.widthAnchor).isActive = true
+        return indicator
     }
     
     private func displayTextForDay(_ day: Int) -> String {
@@ -90,12 +147,12 @@ class CalendarDayView: UIView {
     }
 
     private func initLayout() {
-        container.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(container)
-        container.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        container.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        container.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        container.topAnchor.constraint(greaterThanOrEqualTo: topAnchor).isActive = true
+        labelContainer.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(labelContainer)
+        labelContainer.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        labelContainer.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        labelContainer.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        labelContainer.topAnchor.constraint(greaterThanOrEqualTo: topAnchor).isActive = true
     }
     
     private func updateView() {
@@ -104,18 +161,29 @@ class CalendarDayView: UIView {
             fatalError("Unexpected")
         }
         
-        monthLabel.isHidden = !(day == 1)
+        monthLabel.isHidden = !(day == 1) || isSelected
         if !monthLabel.isHidden {
             monthLabel.text = displayTextForMonth(month)
         }
         
         dayLabel.text = displayTextForDay(day)
         
-        yearLabel.isHidden = !(day == 1 && year != Calendar.current.component(.year, from: Date()))
+        yearLabel.isHidden = !(day == 1 && year != Calendar.current.component(.year, from: Date())) || isSelected
         if !yearLabel.isHidden {
             yearLabel.text = displayTextForYear(year)
         }
         
         backgroundColor = backgroundColorForMonth(month)
+        
+        if isHighlighted || isSelected {
+            if selectionIndicator == nil {
+                selectionIndicator = createSelectionIndicator()
+            }
+            selectionIndicator?.backgroundColor = isHighlighted ? CalendarDayView.highlightBackgroundColor : CalendarDayView.selectionBackgroundColor
+            dayLabel.textColor = CalendarDayView.selectionTextColor
+        } else {
+            selectionIndicator = nil
+            dayLabel.textColor = CalendarDayView.textColor
+        }
     }
 }

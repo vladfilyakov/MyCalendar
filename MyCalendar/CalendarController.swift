@@ -12,10 +12,13 @@ import UIKit
 // TODO: accessibility
 
 class CalendarController: UIViewController {
+    private static let titleColor = UIColor(red: 0, green: 0.47, blue: 0.85, alpha: 1)
+    private static let titleFont = UIFont.boldSystemFont(ofSize: 17)
+    
     private(set) lazy var titleView: UILabel = {
         let titleView = UILabel()
-        titleView.font = UIFont.boldSystemFont(ofSize: 17)
-        titleView.textColor = titleView.tintColor   //!!!
+        titleView.font = CalendarController.titleFont
+        titleView.textColor = CalendarController.titleColor
         titleView.isUserInteractionEnabled = true
         titleView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(titleTapped)))
         return titleView
