@@ -64,6 +64,8 @@ class CalendarDayView: UIView {
         }
     }
     
+    // MARK: Layout
+    
     private lazy var labelContainer: UIStackView = {
         let container = UIStackView(arrangedSubviews: [monthLabel, dayLabel, yearLabel])
         container.axis = .vertical
@@ -102,28 +104,6 @@ class CalendarDayView: UIView {
         }
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        isHighlighted = true
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesEnded(touches, with: event)
-        //!!!
-//        isSelected = true
-        isSelected = !isSelected
-        isHighlighted = false
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesCancelled(touches, with: event)
-        isHighlighted = false
-    }
-    
-    private func backgroundColorForMonth(_ month: Int) -> UIColor {
-        return month % 2 == 1 ? CalendarDayView.backgroundColor1 : CalendarDayView.backgroundColor2
-    }
-    
     private func createSelectionIndicator() -> UIView {
         let indicator = UIView()
         let radius = UIScreen.main.roundToDevicePixels((min(bounds.width, bounds.height) - 2 * CalendarDayView.selectionIndicatorMargin) / 2)
@@ -132,6 +112,21 @@ class CalendarDayView: UIView {
         indicator.widthAnchor.constraint(equalToConstant: 2 * radius).isActive = true
         indicator.heightAnchor.constraint(equalTo: indicator.widthAnchor).isActive = true
         return indicator
+    }
+    
+    private func initLayout() {
+        labelContainer.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(labelContainer)
+        labelContainer.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        labelContainer.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        labelContainer.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        labelContainer.topAnchor.constraint(greaterThanOrEqualTo: topAnchor).isActive = true
+    }
+    
+    // MARK: Presentation
+    
+    private func backgroundColorForMonth(_ month: Int) -> UIColor {
+        return month % 2 == 1 ? CalendarDayView.backgroundColor1 : CalendarDayView.backgroundColor2
     }
     
     private func displayTextForDay(_ day: Int) -> String {
@@ -146,15 +141,6 @@ class CalendarDayView: UIView {
         return CalendarDayView.numberFormatter.string(from: NSNumber(value: year))!
     }
 
-    private func initLayout() {
-        labelContainer.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(labelContainer)
-        labelContainer.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        labelContainer.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        labelContainer.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        labelContainer.topAnchor.constraint(greaterThanOrEqualTo: topAnchor).isActive = true
-    }
-    
     private func updateView() {
         let dateComponents = Calendar.current.dateComponents([.day, .month, .year], from: date)
         guard let day = dateComponents.day, let month = dateComponents.month, let year = dateComponents.year else {
@@ -185,5 +171,25 @@ class CalendarDayView: UIView {
             selectionIndicator = nil
             dayLabel.textColor = CalendarDayView.textColor
         }
+    }
+    
+    // MARK: Touch
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        isHighlighted = true
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        //!!!
+//        isSelected = true
+        isSelected = !isSelected
+        isHighlighted = false
+    }
+    
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesCancelled(touches, with: event)
+        isHighlighted = false
     }
 }
