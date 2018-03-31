@@ -11,6 +11,8 @@ import UIKit
 // TODO: localization
 // TODO: accessibility
 
+// MARK: CalendarController
+
 class CalendarController: UIViewController {
     private static let titleColor = UIColor(red: 0, green: 0.47, blue: 0.85, alpha: 1)
     private static let titleFont = UIFont.boldSystemFont(ofSize: 17)
@@ -31,6 +33,9 @@ class CalendarController: UIViewController {
     }()
     private(set) lazy var agendaView: UITableView = {
         let agendaView = UITableView()
+        agendaView.dataSource = self
+        agendaView.delegate = self
+        agendaView.register(AgendaCell.self, forCellReuseIdentifier: AgendaCell.identifier)
         return agendaView
     }()
     
@@ -69,5 +74,39 @@ class CalendarController: UIViewController {
     
     @objc private func titleTapped() {
         calendarView.setNumberOfWeeks(calendarView.numberOfWeeks == 2 ? 5 : 2, animated: true)
+    }
+}
+
+// MARK: - CalendarController: UITableViewDataSource, UITableViewDelegate - for Agenda View
+
+extension CalendarController: UITableViewDataSource, UITableViewDelegate {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return Int(calendarView.maxDate.daysSince(calendarView.minDate)) + 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        //!!!
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        //!!!
+        return DateFormatter.localizedString(from: date(forAgendaSection: section), dateStyle: .full, timeStyle: .none)
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        //!!!
+        let cell = tableView.dequeueReusableCell(withIdentifier: AgendaCell.identifier, for: indexPath) as! AgendaCell
+        return cell
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if let topIndexPath = (scrollView as? UITableView)?.indexPathsForVisibleRows?.first {
+            calendarView.selectedDate = date(forAgendaSection: topIndexPath.section)
+        }
+    }
+    
+    private func date(forAgendaSection section: Int) -> Date {
+        return calendarView.minDate.addingDays(section)
     }
 }

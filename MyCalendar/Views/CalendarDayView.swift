@@ -41,6 +41,21 @@ class CalendarDayView: UIView {
         fatalError("Not implemented")
     }
     
+    override var bounds: CGRect {
+        didSet {
+            if bounds != oldValue {
+                updateSelectionIndicatorSize()
+            }
+        }
+    }
+    override var frame: CGRect {
+        didSet {
+            if frame != oldValue {
+                updateSelectionIndicatorSize()
+            }
+        }
+    }
+    
     var date: Date! {
         didSet {
             if date != oldValue {
@@ -95,23 +110,29 @@ class CalendarDayView: UIView {
     }()
     private var selectionIndicator: UIView? {
         didSet {
+            if selectionIndicator == oldValue {
+                return
+            }
+            
             oldValue?.removeFromSuperview()
+            selectionIndicatorSizeConstraint = nil
+            
             if let indicator = selectionIndicator {
+                indicator.translatesAutoresizingMaskIntoConstraints = false
                 insertSubview(indicator, at: 0)
                 indicator.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
                 indicator.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+                selectionIndicatorSizeConstraint = indicator.widthAnchor.constraint(equalToConstant: 0)
+                selectionIndicatorSizeConstraint?.isActive = true
+                indicator.heightAnchor.constraint(equalTo: indicator.widthAnchor).isActive = true
+                updateSelectionIndicatorSize()
             }
         }
     }
+    private var selectionIndicatorSizeConstraint: NSLayoutConstraint?
     
     private func createSelectionIndicator() -> UIView {
-        let indicator = UIView()
-        let radius = UIScreen.main.roundToDevicePixels((min(bounds.width, bounds.height) - 2 * CalendarDayView.selectionIndicatorMargin) / 2)
-        indicator.layer.cornerRadius = radius
-        indicator.translatesAutoresizingMaskIntoConstraints = false
-        indicator.widthAnchor.constraint(equalToConstant: 2 * radius).isActive = true
-        indicator.heightAnchor.constraint(equalTo: indicator.widthAnchor).isActive = true
-        return indicator
+        return UIView()
     }
     
     private func initLayout() {
@@ -121,6 +142,16 @@ class CalendarDayView: UIView {
         labelContainer.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         labelContainer.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         labelContainer.topAnchor.constraint(greaterThanOrEqualTo: topAnchor).isActive = true
+    }
+    
+    private func updateSelectionIndicatorSize() {
+        guard let indicator = selectionIndicator else {
+            return
+        }
+        let size = max(0, min(bounds.width, bounds.height) - 2 * CalendarDayView.selectionIndicatorMargin)
+        let radius = UIScreen.main.roundToDevicePixels(size / 2)
+        indicator.layer.cornerRadius = radius
+        selectionIndicatorSizeConstraint?.constant = 2 * radius
     }
     
     // MARK: Presentation

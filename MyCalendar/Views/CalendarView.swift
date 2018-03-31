@@ -8,8 +8,13 @@
 
 import UIKit
 
-// TODO: Semi-transparent cover with month information - is this really needed for our scenario? Do people scroll far from today?
+// CalendarView is pseudo-infinite calendar view (just like the one in Outlook) which is practical for our use case
+// Alternative implementation of dayView could be done using UICollectionView, but so far simpler UITableView is enough
+
+// TODO: Semi-transparent cover with month information during scrolling - is this really needed for our scenario? Do people scroll far from today?
 // TODO: Highlight today when not selected
+
+// MARK: CalendarView
 
 class CalendarView: UIView {
     override init(frame: CGRect) {
@@ -44,9 +49,9 @@ class CalendarView: UIView {
                 return
             }
             //!!!
-            if let date = selectedDate, let indexPath = indexPath(for: date) {
-                dayView.scrollToRow(at: indexPath, at: .top, animated: false)
-            }
+            updateCell(for: oldValue)
+            updateCell(for: selectedDate)
+//            dayView.scrollToRow(at: indexPath, at: .top, animated: false)
         }
     }
     
@@ -109,6 +114,8 @@ class CalendarView: UIView {
     }
 }
 
+// MARK: - CalendarView: UITableViewDataSource, UITableViewDelegate - for Day View
+
 extension CalendarView: UITableViewDataSource, UITableViewDelegate {
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         targetContentOffset.pointee.y = round(targetContentOffset.pointee.y / dayView.rowHeight) * dayView.rowHeight
@@ -131,5 +138,11 @@ extension CalendarView: UITableViewDataSource, UITableViewDelegate {
         }
         let week = Int(startOfWeek.daysSince(minDate) / 7)
         return IndexPath(row: week, section: 0)
+    }
+    
+    private func updateCell(for date: Date?) {
+        if let date = date, let indexPath = indexPath(for: date), let cell = dayView.cellForRow(at: indexPath) as? CalendarWeekCell {
+            cell.initialize(weekStartDate: cell.weekStartDate, selectedDate: selectedDate)
+        }
     }
 }

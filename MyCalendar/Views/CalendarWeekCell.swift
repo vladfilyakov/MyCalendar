@@ -28,6 +28,8 @@ class CalendarWeekCell: UITableViewCell {
         fatalError("Not implemented")
     }
     
+    private(set) var weekStartDate: Date!
+    
     private let dayViews: [CalendarDayView] = {
         var dayViews = [CalendarDayView]()
         for day in 0..<7 {
@@ -37,6 +39,7 @@ class CalendarWeekCell: UITableViewCell {
     }()
     
     func initialize(weekStartDate: Date, selectedDate: Date?) {
+        self.weekStartDate = weekStartDate
         for i in 0..<dayViews.count {
             let dayView = dayViews[i]
             dayView.date = weekStartDate.addingDays(i)

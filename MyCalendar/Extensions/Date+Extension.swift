@@ -8,15 +8,12 @@
 
 import Foundation
 
-let secondsPerDay: TimeInterval = 24 * 60 * 60
-
 extension Date {
     func addingDays(_ days: Int) -> Date {
-//        return addingTimeInterval(TimeInterval(days) * secondsPerDay)
         return Calendar.current.date(byAdding: .day, value: days, to: self)!
     }
     
-    func daysSince(_ date: Date) -> Double {
-        return timeIntervalSince(date) / secondsPerDay
+    func daysSince(_ date: Date) -> Int {
+        return Calendar.current.dateComponents([.day], from: date, to: self).day!
     }
 }
