@@ -48,10 +48,18 @@ class CalendarView: UIView {
             if selectedDate == oldValue {
                 return
             }
-            //!!!
             updateCell(for: oldValue)
             updateCell(for: selectedDate)
-//            dayView.scrollToRow(at: indexPath, at: .top, animated: false)
+            if let date = selectedDate, let indexPath = indexPath(for: date) {
+                if dayView.indexPathsForVisibleRows?.contains(indexPath) == true {
+                    return
+                }
+                if indexPath == lastIndexPathForScrollingToRow {
+                    return
+                }
+                lastIndexPathForScrollingToRow = indexPath
+                dayView.scrollToRow(at: indexPath, at: .none, animated: true)
+            }
         }
     }
     
@@ -78,6 +86,8 @@ class CalendarView: UIView {
         return dayView
     }()
     private let headerView: CalendarHeaderView = CalendarHeaderView()
+    
+    private var lastIndexPathForScrollingToRow: IndexPath?
     
     func setNumberOfWeeks(_ numberOfWeeks: Int, animated: Bool) {
         self.numberOfWeeks = numberOfWeeks
@@ -117,6 +127,12 @@ class CalendarView: UIView {
 // MARK: - CalendarView: UITableViewDataSource, UITableViewDelegate - for Day View
 
 extension CalendarView: UITableViewDataSource, UITableViewDelegate {
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        if let indexPath = lastIndexPathForScrollingToRow, dayView.indexPathsForVisibleRows?.contains(indexPath) == true {
+            lastIndexPathForScrollingToRow = nil
+        }
+    }
+
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         targetContentOffset.pointee.y = round(targetContentOffset.pointee.y / dayView.rowHeight) * dayView.rowHeight
     }
