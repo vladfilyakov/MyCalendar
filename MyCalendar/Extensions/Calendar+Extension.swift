@@ -9,6 +9,10 @@
 import Foundation
 
 extension Calendar {
+    func isDateInCurrentYear(_ date: Date) -> Bool {
+        return compare(date, to: Date(), toGranularity: .year) == .orderedSame
+    }
+    
     func startOfWeek(for date: Date) -> Date {
         let date = startOfDay(for: date)
         let weekday = component(.weekday, from: date)

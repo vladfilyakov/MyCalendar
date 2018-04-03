@@ -1,0 +1,11 @@
+/* 
+  Localizable.strings
+  MyCalendar
+
+  Created by Vladislav Filyakov on 4/3/18.
+  Copyright © 2018 Vlad Filyakov. All rights reserved.
+*/
+
+"RelativeDayName.Yesterday" = "Yesterday";
+"RelativeDayName.Today" = "Today";
+"RelativeDayName.Tomorrow" = "Tomorrow";

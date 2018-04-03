@@ -19,6 +19,8 @@
 		A59298842064ED07005E1F4D /* Calendar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59298832064ED07005E1F4D /* Calendar+Extension.swift */; };
 		A592988B20663589005E1F4D /* UIScreen+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A592988A20663589005E1F4D /* UIScreen+Extension.swift */; };
 		A592988F206A36AE005E1F4D /* CalendarDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A592988E206A36AE005E1F4D /* CalendarDayView.swift */; };
+		A5B5A719207437A800578966 /* CalendarFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B5A718207437A800578966 /* CalendarFormatter.swift */; };
+		A5B5A71B2074391A00578966 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A5B5A71A2074391A00578966 /* Localizable.strings */; };
 		A5DFCB5B206B65960093D9F2 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5DFCB5A206B65960093D9F2 /* UIView+Extension.swift */; };
 		A5F2E527206F4E7900106F71 /* AgendaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F2E526206F4E7900106F71 /* AgendaCell.swift */; };
 /* End PBXBuildFile section */
@@ -50,6 +52,8 @@
 		A59298832064ED07005E1F4D /* Calendar+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Calendar+Extension.swift"; sourceTree = "<group>"; };
 		A592988A20663589005E1F4D /* UIScreen+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScreen+Extension.swift"; sourceTree = "<group>"; };
 		A592988E206A36AE005E1F4D /* CalendarDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarDayView.swift; sourceTree = "<group>"; };
+		A5B5A718207437A800578966 /* CalendarFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarFormatter.swift; sourceTree = "<group>"; };
+		A5B5A71A2074391A00578966 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		A5DFCB5A206B65960093D9F2 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		A5F2E526206F4E7900106F71 /* AgendaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgendaCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -94,11 +98,11 @@
 			isa = PBXGroup;
 			children = (
 				A59298802064ECD3005E1F4D /* Extensions */,
+				A5B5A7162074343A00578966 /* Resources */,
+				A5B5A7172074376000578966 /* Utilities */,
 				A54A396C2063884A00CA6EBD /* Views */,
 				A54A394C20637F6A00CA6EBD /* AppDelegate.swift */,
 				A54A394E20637F6A00CA6EBD /* CalendarController.swift */,
-				A54A395520637F6A00CA6EBD /* LaunchScreen.storyboard */,
-				A54A395320637F6A00CA6EBD /* Assets.xcassets */,
 				A54A395820637F6A00CA6EBD /* Info.plist */,
 			);
 			path = MyCalendar;
@@ -134,6 +138,24 @@
 				A5DFCB5A206B65960093D9F2 /* UIView+Extension.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		A5B5A7162074343A00578966 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A54A395320637F6A00CA6EBD /* Assets.xcassets */,
+				A54A395520637F6A00CA6EBD /* LaunchScreen.storyboard */,
+				A5B5A71A2074391A00578966 /* Localizable.strings */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A5B5A7172074376000578966 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				A5B5A718207437A800578966 /* CalendarFormatter.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -220,6 +242,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A54A395720637F6A00CA6EBD /* LaunchScreen.storyboard in Resources */,
+				A5B5A71B2074391A00578966 /* Localizable.strings in Resources */,
 				A54A395420637F6A00CA6EBD /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -246,6 +269,7 @@
 				A54A394D20637F6A00CA6EBD /* AppDelegate.swift in Sources */,
 				A592987F2064E220005E1F4D /* CalendarHeaderView.swift in Sources */,
 				A592988F206A36AE005E1F4D /* CalendarDayView.swift in Sources */,
+				A5B5A719207437A800578966 /* CalendarFormatter.swift in Sources */,
 				A54A396E2063886200CA6EBD /* CalendarView.swift in Sources */,
 				A5DFCB5B206B65960093D9F2 /* UIView+Extension.swift in Sources */,
 				A59298822064ECE6005E1F4D /* Date+Extension.swift in Sources */,
