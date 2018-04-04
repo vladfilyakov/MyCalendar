@@ -16,8 +16,9 @@ import UIKit
 
 // MARK: - CalendarViewDelegate
 
-protocol CalendarViewDelegate: class {
+@objc protocol CalendarViewDelegate: class {
     func calendarView(_ view: CalendarView, didSelectDate date: Date?)
+    @objc optional func calendarViewWillBeginDragging(_ view: CalendarView)
 }
 
 // MARK: - CalendarView
@@ -146,6 +147,10 @@ extension CalendarView: UITableViewDataSource, UITableViewDelegate {
         if let indexPath = lastIndexPathForScrollingToRow, dayView.indexPathsForVisibleRows?.contains(indexPath) == true {
             lastIndexPathForScrollingToRow = nil
         }
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        delegate?.calendarViewWillBeginDragging?(self)
     }
 
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {

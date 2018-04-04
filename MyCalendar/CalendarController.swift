@@ -16,6 +16,9 @@ class CalendarController: UIViewController {
     // Outlook has a fixed agenda section header height
     private static let agendaSectionHeaderHeight: CGFloat = 26
     
+    private static let calendarViewNormalWeeks = 2
+    private static let calendarViewExpandedWeeks = 5
+
     private static let selectedDateColor = UIColor(red: 0, green: 0.47, blue: 0.85, alpha: 1)
     
     private static let agendaSectionHeaderFont = UIFont.preferredFont(forTextStyle: .subheadline)
@@ -37,7 +40,7 @@ class CalendarController: UIViewController {
     }()
     private(set) lazy var calendarView: CalendarView = {
         let calendarView = CalendarView()
-        calendarView.numberOfWeeks = 2
+        calendarView.numberOfWeeks = CalendarController.calendarViewNormalWeeks
         calendarView.addSubview(createBottomSeparator(for: calendarView))
         calendarView.delegate = self
         return calendarView
@@ -51,6 +54,17 @@ class CalendarController: UIViewController {
         return agendaView
     }()
     
+    private var isCalendarViewExpanded: Bool = false {
+        didSet {
+            if isCalendarViewExpanded == oldValue {
+                return
+            }
+            calendarView.setNumberOfWeeks(
+                isCalendarViewExpanded ? CalendarController.calendarViewExpandedWeeks : CalendarController.calendarViewNormalWeeks,
+                animated: true
+            )
+        }
+    }
     private var isScrollingAgendaView: Bool = false
 
     func setSelectedDate(_ date: Date?, excludingAgenda: Bool = false, animated: Bool) {
@@ -100,7 +114,7 @@ class CalendarController: UIViewController {
     }
     
     @objc private func titleTapped() {
-        calendarView.setNumberOfWeeks(calendarView.numberOfWeeks == 2 ? 5 : 2, animated: true)
+        isCalendarViewExpanded = !isCalendarViewExpanded
     }
 }
 
@@ -109,6 +123,10 @@ class CalendarController: UIViewController {
 extension CalendarController: CalendarViewDelegate {
     func calendarView(_ view: CalendarView, didSelectDate date: Date?) {
         setSelectedDate(date, animated: true)
+    }
+    
+    func calendarViewWillBeginDragging(_ view: CalendarView) {
+        isCalendarViewExpanded = true
     }
 }
 
@@ -123,6 +141,10 @@ extension CalendarController: UITableViewDataSource, UITableViewDelegate {
         if !isScrollingAgendaView, let topIndexPath = (scrollView as? UITableView)?.indexPathsForVisibleRows?.first {
             setSelectedDate(date(forAgendaSection: topIndexPath.section), excludingAgenda: true, animated: true)
         }
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        isCalendarViewExpanded = false
     }
 
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
