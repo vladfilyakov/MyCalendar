@@ -73,6 +73,8 @@ class CalendarDayView: UIView {
         }
     }
     
+    var tapped: (() -> Void)?
+    
     // MARK: Layout
     
     private lazy var labelContainer: UIStackView = {
@@ -210,10 +212,8 @@ class CalendarDayView: UIView {
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
-        //!!!
-//        isSelected = true
-        isSelected = !isSelected
         isHighlighted = false
+        tapped?()
     }
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {

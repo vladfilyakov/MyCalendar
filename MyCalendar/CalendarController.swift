@@ -8,7 +8,6 @@
 
 import UIKit
 
-// TODO: localization
 // TODO: accessibility
 
 // MARK: CalendarController
@@ -40,6 +39,7 @@ class CalendarController: UIViewController {
         let calendarView = CalendarView()
         calendarView.numberOfWeeks = 2
         calendarView.addSubview(createBottomSeparator(for: calendarView))
+        calendarView.delegate = self
         return calendarView
     }()
     private(set) lazy var agendaView: UITableView = {
@@ -51,6 +51,8 @@ class CalendarController: UIViewController {
         return agendaView
     }()
     
+    private var isScrollingAgendaView: Bool = false
+
     func setSelectedDate(_ date: Date?, excludingAgenda: Bool = false, animated: Bool) {
         titleView.text = date != nil ? CalendarFormatter.fullMonthString(from: date!) : nil
         titleView.sizeToFit()
@@ -58,6 +60,7 @@ class CalendarController: UIViewController {
         calendarView.setSelectedDate(date, animated: animated)
         
         if !excludingAgenda, let date = date {
+            isScrollingAgendaView = animated
             agendaView.scrollToRow(at: IndexPath(row: 0, section: agendaSection(for: date)), at: .top, animated: animated)
         }
     }
@@ -101,11 +104,23 @@ class CalendarController: UIViewController {
     }
 }
 
+// MARK: - CalendarController: CalendarViewDelegate - for Calendar view
+
+extension CalendarController: CalendarViewDelegate {
+    func calendarView(_ view: CalendarView, didSelectDate date: Date?) {
+        setSelectedDate(date, animated: true)
+    }
+}
+
 // MARK: - CalendarController: UITableViewDataSource, UITableViewDelegate - for Agenda View
 
 extension CalendarController: UITableViewDataSource, UITableViewDelegate {
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        isScrollingAgendaView = false
+    }
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if let topIndexPath = (scrollView as? UITableView)?.indexPathsForVisibleRows?.first {
+        if !isScrollingAgendaView, let topIndexPath = (scrollView as? UITableView)?.indexPathsForVisibleRows?.first {
             setSelectedDate(date(forAgendaSection: topIndexPath.section), excludingAgenda: true, animated: true)
         }
     }

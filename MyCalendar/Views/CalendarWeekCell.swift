@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol CalendarWeekCellDelegate: class {
+    func calendarWeekCell(_ cell: CalendarWeekCell, wasTappedOnDate date: Date)
+}
+
 class CalendarWeekCell: UITableViewCell {
     static let identifier = "CalendarWeekCell"
     
@@ -30,10 +34,16 @@ class CalendarWeekCell: UITableViewCell {
     
     private(set) var weekStartDate: Date!
     
-    private let dayViews: [CalendarDayView] = {
+    weak var delegate: CalendarWeekCellDelegate?
+    
+    private lazy var dayViews: [CalendarDayView] = {
         var dayViews = [CalendarDayView]()
         for day in 0..<7 {
-            dayViews.append(CalendarDayView())
+            let dayView = CalendarDayView()
+            dayView.tapped = { [unowned self, unowned dayView] in
+                self.dayViewTapped(dayView)
+            }
+            dayViews.append(dayView)
         }
         return dayViews
     }()
@@ -54,5 +64,9 @@ class CalendarWeekCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         contentView.fitSubviewsHorizontally(dayViews)
+    }
+    
+    private func dayViewTapped(_ dayView: CalendarDayView) {
+        delegate?.calendarWeekCell(self, wasTappedOnDate: dayView.date)
     }
 }

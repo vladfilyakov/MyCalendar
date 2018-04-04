@@ -14,7 +14,13 @@ import UIKit
 // TODO: Semi-transparent cover with month information during scrolling - is this really needed for our scenario? Do people scroll far from today?
 // TODO: Highlight today when not selected
 
-// MARK: CalendarView
+// MARK: - CalendarViewDelegate
+
+protocol CalendarViewDelegate: class {
+    func calendarView(_ view: CalendarView, didSelectDate date: Date?)
+}
+
+// MARK: - CalendarView
 
 class CalendarView: UIView {
     override init(frame: CGRect) {
@@ -46,16 +52,18 @@ class CalendarView: UIView {
         set { setSelectedDate(newValue, animated: false) }
     }
     
+    let minDate: Date
+    let maxDate: Date
+    private let totalWeeks: Int
+    
+    weak var delegate: CalendarViewDelegate?
+    
     override var intrinsicContentSize: CGSize {
         return CGSize(
             width: UIViewNoIntrinsicMetric,
             height: CalendarHeaderView.height + CGFloat(numberOfWeeks) * dayView.rowHeight
         )
     }
-    
-    let minDate: Date
-    let maxDate: Date
-    private let totalWeeks: Int
     
     private lazy var dayView: UITableView = {
         let dayView = UITableView(frame: .zero, style: .plain)
@@ -151,6 +159,7 @@ extension CalendarView: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CalendarWeekCell.identifier, for: indexPath) as! CalendarWeekCell
         cell.initialize(weekStartDate: minDate.addingDays(indexPath.row * 7), selectedDate: selectedDate)
+        cell.delegate = self
         return cell
     }
     
@@ -166,6 +175,18 @@ extension CalendarView: UITableViewDataSource, UITableViewDelegate {
     private func updateCell(for date: Date?) {
         if let date = date, let indexPath = indexPath(for: date), let cell = dayView.cellForRow(at: indexPath) as? CalendarWeekCell {
             cell.initialize(weekStartDate: cell.weekStartDate, selectedDate: selectedDate)
+        }
+    }
+}
+
+// MARK: - CalendarView: CalendarWeekCellDelegate - for Day View cells
+
+extension CalendarView: CalendarWeekCellDelegate {
+    func calendarWeekCell(_ cell: CalendarWeekCell, wasTappedOnDate date: Date) {
+        let oldSelectedDate = selectedDate
+        selectedDate = date
+        if selectedDate != oldSelectedDate {
+            delegate?.calendarView(self, didSelectDate: selectedDate)
         }
     }
 }
