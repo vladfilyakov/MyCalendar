@@ -79,6 +79,7 @@ class CalendarDayView: UIView {
         let container = UIStackView(arrangedSubviews: [monthLabel, dayLabel, yearLabel])
         container.axis = .vertical
         container.distribution = .fillEqually
+        container.isUserInteractionEnabled = false
         return container
     }()
     private let dayLabel: UILabel = {
@@ -126,7 +127,9 @@ class CalendarDayView: UIView {
     private var selectionIndicatorSizeConstraint: NSLayoutConstraint?
     
     private func createSelectionIndicator() -> UIView {
-        return UIView()
+        let selectionIndicator = UIView()
+        selectionIndicator.isUserInteractionEnabled = false
+        return selectionIndicator
     }
     
     private func initLayout() {
