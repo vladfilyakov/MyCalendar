@@ -51,13 +51,13 @@ class CalendarController: UIViewController {
         return agendaView
     }()
     
-    func setSelectedDate(_ date: Date?, animated: Bool) {
+    func setSelectedDate(_ date: Date?, excludingAgenda: Bool = false, animated: Bool) {
         titleView.text = date != nil ? CalendarFormatter.fullMonthString(from: date!) : nil
         titleView.sizeToFit()
         
         calendarView.setSelectedDate(date, animated: animated)
         
-        if let date = date {
+        if !excludingAgenda, let date = date {
             agendaView.scrollToRow(at: IndexPath(row: 0, section: agendaSection(for: date)), at: .top, animated: animated)
         }
     }
@@ -106,7 +106,7 @@ class CalendarController: UIViewController {
 extension CalendarController: UITableViewDataSource, UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if let topIndexPath = (scrollView as? UITableView)?.indexPathsForVisibleRows?.first {
-            calendarView.setSelectedDate(date(forAgendaSection: topIndexPath.section), animated: true)
+            setSelectedDate(date(forAgendaSection: topIndexPath.section), excludingAgenda: true, animated: true)
         }
     }
 
