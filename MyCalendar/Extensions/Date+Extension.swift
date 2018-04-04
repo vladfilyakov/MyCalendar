@@ -12,6 +12,9 @@ extension Date {
     var isInCurrentYear: Bool {
         return Calendar.current.isDateInCurrentYear(self)
     }
+    var isToday: Bool {
+        return Calendar.current.isDateInToday(self)
+    }
     
     func addingDays(_ days: Int) -> Date {
         return Calendar.current.date(byAdding: .day, value: days, to: self)!

@@ -17,10 +17,16 @@ class CalendarController: UIViewController {
     // Outlook has a fixed agenda section header height
     private static let agendaSectionHeaderHeight: CGFloat = 26
     
+    private static let selectedDateColor = UIColor(red: 0, green: 0.47, blue: 0.85, alpha: 1)
+    
     private static let agendaSectionHeaderFont = UIFont.preferredFont(forTextStyle: .subheadline)
+    private static let agendaSectionHeaderBackgroundColor = UIColor(red: 0.97, green: 0.97, blue: 0.98, alpha: 1)
     private static let agendaSectionHeaderTextColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
+    private static let agendaSectionHeaderTodayBackgroundColor = UIColor(red: 0.95, green: 0.98, blue: 0.99, alpha: 1)
+    private static let agendaSectionHeaderTodayTextColor = selectedDateColor
+
     private static let titleFont = UIFont.boldSystemFont(ofSize: 17)
-    private static let titleTextColor = UIColor(red: 0, green: 0.47, blue: 0.85, alpha: 1)
+    private static let titleTextColor = selectedDateColor
 
     private(set) lazy var titleView: UILabel = {
         let titleView = UILabel()
@@ -128,8 +134,10 @@ extension CalendarController: UITableViewDataSource, UITableViewDelegate {
         guard let headerView = view as? UITableViewHeaderFooterView else {
             return
         }
-        headerView.textLabel?.textColor = CalendarController.agendaSectionHeaderTextColor
+        let dateIsToday = date(forAgendaSection: section).isToday
         headerView.textLabel?.font = CalendarController.agendaSectionHeaderFont
+        headerView.textLabel?.textColor = dateIsToday ? CalendarController.agendaSectionHeaderTodayTextColor : CalendarController.agendaSectionHeaderTextColor
+        headerView.backgroundView?.backgroundColor = dateIsToday ? CalendarController.agendaSectionHeaderTodayBackgroundColor : CalendarController.agendaSectionHeaderBackgroundColor
     }
     
     private func date(forAgendaSection section: Int) -> Date {
