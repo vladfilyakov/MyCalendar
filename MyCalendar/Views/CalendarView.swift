@@ -40,27 +40,10 @@ class CalendarView: UIView {
             }
         }
     }
+    private var _selectedDate: Date?
     var selectedDate: Date? {
-        didSet {
-            if let date = selectedDate {
-                selectedDate = Calendar.current.startOfDay(for: date)
-            }
-            if selectedDate == oldValue {
-                return
-            }
-            updateCell(for: oldValue)
-            updateCell(for: selectedDate)
-            if let date = selectedDate, let indexPath = indexPath(for: date) {
-                if dayView.indexPathsForVisibleRows?.contains(indexPath) == true {
-                    return
-                }
-                if indexPath == lastIndexPathForScrollingToRow {
-                    return
-                }
-                lastIndexPathForScrollingToRow = indexPath
-                dayView.scrollToRow(at: indexPath, at: .none, animated: true)
-            }
-        }
+        get { return _selectedDate }
+        set { setSelectedDate(newValue, animated: false) }
     }
     
     override var intrinsicContentSize: CGSize {
@@ -95,6 +78,30 @@ class CalendarView: UIView {
             UIView.animate(withDuration: 0.2) {
                 self.superview?.layoutIfNeeded()
             }
+        }
+    }
+    
+    func setSelectedDate(_ date: Date?, animated: Bool) {
+        var newSelectedDate = date
+        if let date = newSelectedDate {
+            newSelectedDate = Calendar.current.startOfDay(for: date)
+        }
+        if selectedDate == newSelectedDate {
+            return
+        }
+        let oldSelectedDate = selectedDate
+        _selectedDate = newSelectedDate
+        updateCell(for: oldSelectedDate)
+        updateCell(for: selectedDate)
+        if let date = selectedDate, let indexPath = indexPath(for: date) {
+            if dayView.indexPathsForVisibleRows?.contains(indexPath) == true {
+                return
+            }
+            if indexPath == lastIndexPathForScrollingToRow {
+                return
+            }
+            lastIndexPathForScrollingToRow = indexPath
+            dayView.scrollToRow(at: indexPath, at: .none, animated: animated)
         }
     }
     

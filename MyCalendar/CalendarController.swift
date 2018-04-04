@@ -45,6 +45,13 @@ class CalendarController: UIViewController {
         return agendaView
     }()
     
+    func setSelectedDate(_ date: Date?, animated: Bool) {
+        calendarView.setSelectedDate(date, animated: animated)
+        if let date = date {
+            agendaView.scrollToRow(at: IndexPath(row: 0, section: agendaSection(for: date)), at: .top, animated: animated)
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         initLayout()
@@ -54,9 +61,11 @@ class CalendarController: UIViewController {
         
         titleView.text = "March 2018"   //!!!
         navigationItem.titleView = titleView
-        
-        //!!!
-        calendarView.selectedDate = Date()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        setSelectedDate(Date(), animated: false)
     }
     
     private func initLayout() {
@@ -88,7 +97,7 @@ class CalendarController: UIViewController {
 extension CalendarController: UITableViewDataSource, UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if let topIndexPath = (scrollView as? UITableView)?.indexPathsForVisibleRows?.first {
-            calendarView.selectedDate = date(forAgendaSection: topIndexPath.section)
+            calendarView.setSelectedDate(date(forAgendaSection: topIndexPath.section), animated: true)
         }
     }
 
@@ -125,5 +134,9 @@ extension CalendarController: UITableViewDataSource, UITableViewDelegate {
     
     private func date(forAgendaSection section: Int) -> Date {
         return calendarView.minDate.addingDays(section)
+    }
+    
+    private func agendaSection(for date: Date) -> Int {
+        return date.daysSince(calendarView.minDate)
     }
 }
