@@ -20,6 +20,24 @@ class CalendarFormatter {
         return dateFormatter
     }()
     
+    private static let numberFormatter: NumberFormatter = {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .none
+        return numberFormatter
+    }()
+
+    static func fullMonthString(from date: Date) -> String {
+        let dateComponents = Calendar.current.dateComponents([.month, .year], from: date)
+        let monthString = Calendar.current.standaloneMonthSymbols[dateComponents.month! - 1]
+        if date.isInCurrentYear {
+            return monthString
+        } else {
+            // TODO: use "MMMM yyyy" localized template format instead?
+            let yearString = string(from: dateComponents.year!)
+            return "\(monthString) \(yearString)"
+        }
+    }
+    
     static func fullString(from date: Date) -> String {
         let formatter = date.isInCurrentYear ? dateFormatterWithoutYear : dateFormatterWithYear
         var string = formatter.string(from: date)
@@ -27,6 +45,10 @@ class CalendarFormatter {
             string = prefix + " • " + string
         }
         return string
+    }
+    
+    static func string(from number: Int) -> String {
+        return numberFormatter.string(from: NSNumber(value: number))!
     }
     
     private static func relativeDayName(from date: Date) -> String? {

@@ -52,7 +52,11 @@ class CalendarController: UIViewController {
     }()
     
     func setSelectedDate(_ date: Date?, animated: Bool) {
+        titleView.text = date != nil ? CalendarFormatter.fullMonthString(from: date!) : nil
+        titleView.sizeToFit()
+        
         calendarView.setSelectedDate(date, animated: animated)
+        
         if let date = date {
             agendaView.scrollToRow(at: IndexPath(row: 0, section: agendaSection(for: date)), at: .top, animated: animated)
         }
@@ -65,7 +69,6 @@ class CalendarController: UIViewController {
         // Hiding navigation bar's bottom shadow to get a "merged" with calendar header look
         navigationController?.navigationBar.shadowImage = UIImage()
         
-        titleView.text = "March 2018"   //!!!
         navigationItem.titleView = titleView
     }
     

@@ -27,12 +27,6 @@ class CalendarDayView: UIView {
     private static let selectionTextColor = UIColor.white
     private static let textColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
 
-    private static let numberFormatter: NumberFormatter = {
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .none
-        return numberFormatter
-    }()
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         initLayout()
@@ -161,7 +155,7 @@ class CalendarDayView: UIView {
     }
     
     private func displayTextForDay(_ day: Int) -> String {
-        return CalendarDayView.numberFormatter.string(from: NSNumber(value: day))!
+        return CalendarFormatter.string(from: day)
     }
     
     private func displayTextForMonth(_ month: Int) -> String {
@@ -169,7 +163,7 @@ class CalendarDayView: UIView {
     }
     
     private func displayTextForYear(_ year: Int) -> String {
-        return CalendarDayView.numberFormatter.string(from: NSNumber(value: year))!
+        return CalendarFormatter.string(from: year)
     }
 
     private func updateView() {
