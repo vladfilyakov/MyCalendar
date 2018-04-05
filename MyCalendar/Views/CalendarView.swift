@@ -70,8 +70,10 @@ class CalendarView: UIView {
         dayView.allowsSelection = false
         dayView.rowHeight = CalendarWeekCell.height
         dayView.estimatedRowHeight = dayView.rowHeight
+        dayView.scrollsToTop = false
         dayView.separatorColor = CalendarWeekCell.separatorColor
         dayView.separatorInset = .zero
+        dayView.showsVerticalScrollIndicator = false
         dayView.dataSource = self
         dayView.delegate = self
         dayView.register(CalendarWeekCell.self, forCellReuseIdentifier: CalendarWeekCell.identifier)

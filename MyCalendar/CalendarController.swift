@@ -47,7 +47,9 @@ class CalendarController: UIViewController {
     }()
     private(set) lazy var agendaView: UITableView = {
         let agendaView = UITableView()
+        agendaView.scrollsToTop = false
         agendaView.sectionHeaderHeight = CalendarController.agendaSectionHeaderHeight
+        agendaView.showsVerticalScrollIndicator = false
         agendaView.dataSource = self
         agendaView.delegate = self
         agendaView.register(AgendaCell.self, forCellReuseIdentifier: AgendaCell.identifier)
