@@ -24,6 +24,8 @@ import UIKit
 // MARK: - CalendarView
 
 class CalendarView: UIView {
+    private static let numberOfWeeksAnimationDuration: TimeInterval = 0.2
+    
     override init(frame: CGRect) {
         // Outlook goes back about 3000 days and forward about 653
         let today = Date()
@@ -39,13 +41,10 @@ class CalendarView: UIView {
         fatalError("Not implemented")
     }
     
-    var numberOfWeeks: Int = 5 {
-        didSet {
-            numberOfWeeks = max(1, numberOfWeeks)
-            if numberOfWeeks != oldValue {
-                invalidateIntrinsicContentSize()
-            }
-        }
+    private var _numberOfWeeks: Int = 5
+    var numberOfWeeks: Int {
+        get { return _numberOfWeeks }
+        set { setNumberOfWeeks(newValue, animated: false) }
     }
     private var _selectedDate: Date?
     var selectedDate: Date? {
@@ -70,6 +69,7 @@ class CalendarView: UIView {
         let dayView = UITableView(frame: .zero, style: .plain)
         dayView.allowsSelection = false
         dayView.rowHeight = CalendarWeekCell.height
+        dayView.estimatedRowHeight = dayView.rowHeight
         dayView.separatorColor = CalendarWeekCell.separatorColor
         dayView.separatorInset = .zero
         dayView.dataSource = self
@@ -81,11 +81,38 @@ class CalendarView: UIView {
     
     private var lastIndexPathForScrollingToRow: IndexPath?
     
+    func makeDateVisible(_ date: Date, animated: Bool) {
+        guard let indexPath = indexPath(for: date) else {
+            return
+        }
+        if indexPath == lastIndexPathForScrollingToRow {
+            return
+        }
+        lastIndexPathForScrollingToRow = animated ? indexPath : nil
+        dayView.scrollToRow(at: indexPath, at: .none, animated: animated)
+    }
+
     func setNumberOfWeeks(_ numberOfWeeks: Int, animated: Bool) {
-        self.numberOfWeeks = numberOfWeeks
+        let newNumberOfWeeks = max(1, numberOfWeeks)
+        if self.numberOfWeeks == newNumberOfWeeks {
+            return
+        }
+        
+        let oldNumberOfWeeks = self.numberOfWeeks
+        _numberOfWeeks = newNumberOfWeeks
+        invalidateIntrinsicContentSize()
+
         if animated {
-            UIView.animate(withDuration: 0.2) {
+            UIView.animate(withDuration: CalendarView.numberOfWeeksAnimationDuration) {
                 self.superview?.layoutIfNeeded()
+                if self.numberOfWeeks < oldNumberOfWeeks, let date = self.selectedDate {
+                    self.makeDateVisible(date, animated: false)
+                }
+            }
+        } else {
+            if self.numberOfWeeks < oldNumberOfWeeks, let date = self.selectedDate {
+                self.superview?.layoutIfNeeded()
+                self.makeDateVisible(date, animated: false)
             }
         }
     }
@@ -98,19 +125,13 @@ class CalendarView: UIView {
         if selectedDate == newSelectedDate {
             return
         }
+        
         let oldSelectedDate = selectedDate
         _selectedDate = newSelectedDate
         updateCell(for: oldSelectedDate)
         updateCell(for: selectedDate)
-        if let date = selectedDate, let indexPath = indexPath(for: date) {
-            if dayView.indexPathsForVisibleRows?.contains(indexPath) == true {
-                return
-            }
-            if indexPath == lastIndexPathForScrollingToRow {
-                return
-            }
-            lastIndexPathForScrollingToRow = indexPath
-            dayView.scrollToRow(at: indexPath, at: .none, animated: animated)
+        if let date = selectedDate {
+            makeDateVisible(date, animated: animated)
         }
     }
     
