@@ -74,8 +74,10 @@ class CalendarController: UIViewController {
         calendarView.setSelectedDate(date, animated: animated)
         
         if !excludingAgenda, let date = date {
-            isScrollingAgendaView = animated
             agendaView.scrollToRow(at: IndexPath(row: 0, section: agendaSection(for: date)), at: .top, animated: animated)
+            // Assignment of isScrollingAgendaView should be after scrollToRow
+            // because it calls scrollViewDidEndScrollingAnimation for the currently running animation
+            isScrollingAgendaView = animated
         }
     }
 
