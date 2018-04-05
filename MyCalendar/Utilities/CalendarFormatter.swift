@@ -20,22 +20,32 @@ class CalendarFormatter {
         return dateFormatter
     }()
     
+    private static let monthFormatterWithYear: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.setLocalizedDateFormatFromTemplate("MMMM yyyy")
+        return dateFormatter
+    }()
+    private static let monthFormatterWithoutYear: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.setLocalizedDateFormatFromTemplate("MMMM")
+        return dateFormatter
+    }()
+    
     private static let numberFormatter: NumberFormatter = {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .none
         return numberFormatter
     }()
 
+    private static let shortMonthFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.setLocalizedDateFormatFromTemplate("MMM")
+        return dateFormatter
+    }()
+    
     static func fullMonthString(from date: Date) -> String {
-        let dateComponents = Calendar.current.dateComponents([.month, .year], from: date)
-        let monthString = Calendar.current.standaloneMonthSymbols[dateComponents.month! - 1]
-        if date.isInCurrentYear {
-            return monthString
-        } else {
-            // TODO: use "MMMM yyyy" localized template format instead?
-            let yearString = string(from: dateComponents.year!)
-            return "\(monthString) \(yearString)"
-        }
+        let formatter = date.isInCurrentYear ? monthFormatterWithoutYear : monthFormatterWithYear
+        return formatter.string(from: date)
     }
     
     static func fullString(from date: Date) -> String {
@@ -45,6 +55,10 @@ class CalendarFormatter {
             string = prefix + " • " + string
         }
         return string
+    }
+    
+    static func shortMonthString(from date: Date) -> String {
+        return shortMonthFormatter.string(from: date)
     }
     
     static func string(from number: Int) -> String {

@@ -159,18 +159,6 @@ class CalendarDayView: UIView {
     
     // MARK: Presentation
     
-    private func displayTextForDay(_ day: Int) -> String {
-        return CalendarFormatter.string(from: day)
-    }
-    
-    private func displayTextForMonth(_ month: Int) -> String {
-        return Calendar.current.shortMonthSymbols[month - 1]
-    }
-    
-    private func displayTextForYear(_ year: Int) -> String {
-        return CalendarFormatter.string(from: year)
-    }
-
     private func updateView() {
         let dateComponents = Calendar.current.dateComponents([.day, .month, .year], from: date)
         guard let day = dateComponents.day, let month = dateComponents.month, let year = dateComponents.year else {
@@ -179,14 +167,14 @@ class CalendarDayView: UIView {
         
         monthLabel.isHidden = !(day == 1) || isHighlighted || isSelected
         if !monthLabel.isHidden {
-            monthLabel.text = displayTextForMonth(month)
+            monthLabel.text = CalendarFormatter.shortMonthString(from: date)
         }
         
-        dayLabel.text = displayTextForDay(day)
+        dayLabel.text = CalendarFormatter.string(from: day)
         
         yearLabel.isHidden = !(day == 1 && year != Calendar.current.component(.year, from: Date())) || isHighlighted || isSelected
         if !yearLabel.isHidden {
-            yearLabel.text = displayTextForYear(year)
+            yearLabel.text = CalendarFormatter.string(from: year)
         }
         
         let presentationParams = self.presentationParams(month: month, isToday: date.isToday)
