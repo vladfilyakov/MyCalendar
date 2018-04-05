@@ -12,7 +12,6 @@ import UIKit
 // Alternative implementation of dayView could be done using UICollectionView, but so far simpler UITableView is enough
 
 // TODO: Semi-transparent cover with month information during scrolling - is this really needed for our scenario? Do people scroll far from today?
-// TODO: Highlight today when not selected
 
 // MARK: - CalendarViewDelegate
 

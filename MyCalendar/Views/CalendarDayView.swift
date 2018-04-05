@@ -20,13 +20,17 @@ class CalendarDayView: UIView {
     private static let monthTextFont = UIFont.systemFont(ofSize: 13)
     private static let yearTextFont = UIFont.systemFont(ofSize: 13)
     
-    private static let backgroundColor1 = UIColor.white
-    private static let backgroundColor2 = UIColor(red: 0.97, green: 0.97, blue: 0.98, alpha: 1)
+    private static let selectedDateColor = UIColor(red: 0, green: 0.47, blue: 0.85, alpha: 1)
+
+    private static let oddMonthBackgroundColor = UIColor(red: 0.97, green: 0.97, blue: 0.98, alpha: 1)
+    private static let evenMonthBackgroundColor = UIColor.white
     private static let highlightBackgroundColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
-    private static let selectionBackgroundColor = UIColor(red: 0, green: 0.47, blue: 0.85, alpha: 1)
+    private static let selectionBackgroundColor = selectedDateColor
     private static let selectionTextColor = UIColor.white
     private static let textColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
-
+    private static let todayBackgroundColor = UIColor(red: 0.95, green: 0.98, blue: 0.99, alpha: 1)
+    private static let todayTextColor = selectedDateColor
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         initLayout()
@@ -155,10 +159,6 @@ class CalendarDayView: UIView {
     
     // MARK: Presentation
     
-    private func backgroundColorForMonth(_ month: Int) -> UIColor {
-        return month % 2 == 1 ? CalendarDayView.backgroundColor1 : CalendarDayView.backgroundColor2
-    }
-    
     private func displayTextForDay(_ day: Int) -> String {
         return CalendarFormatter.string(from: day)
     }
@@ -177,30 +177,48 @@ class CalendarDayView: UIView {
             fatalError("Unexpected")
         }
         
-        monthLabel.isHidden = !(day == 1) || isSelected
+        monthLabel.isHidden = !(day == 1) || isHighlighted || isSelected
         if !monthLabel.isHidden {
             monthLabel.text = displayTextForMonth(month)
         }
         
         dayLabel.text = displayTextForDay(day)
         
-        yearLabel.isHidden = !(day == 1 && year != Calendar.current.component(.year, from: Date())) || isSelected
+        yearLabel.isHidden = !(day == 1 && year != Calendar.current.component(.year, from: Date())) || isHighlighted || isSelected
         if !yearLabel.isHidden {
             yearLabel.text = displayTextForYear(year)
         }
         
-        backgroundColor = backgroundColorForMonth(month)
-        
-        if isHighlighted || isSelected {
+        let presentationParams = self.presentationParams(month: month, isToday: date.isToday)
+        backgroundColor = presentationParams.backgroundColor
+        dayLabel.textColor = presentationParams.textColor
+        if let selectionColor = presentationParams.selectionColor {
             if selectionIndicator == nil {
                 selectionIndicator = createSelectionIndicator()
             }
-            selectionIndicator?.backgroundColor = isHighlighted ? CalendarDayView.highlightBackgroundColor : CalendarDayView.selectionBackgroundColor
-            dayLabel.textColor = CalendarDayView.selectionTextColor
+            selectionIndicator?.backgroundColor = selectionColor
         } else {
             selectionIndicator = nil
-            dayLabel.textColor = CalendarDayView.textColor
         }
+    }
+    
+    private func presentationParams(month: Int, isToday: Bool) -> (backgroundColor: UIColor, textColor: UIColor, selectionColor: UIColor?) {
+        var params: (backgroundColor: UIColor, textColor: UIColor, selectionColor: UIColor?)
+        
+        params.backgroundColor = month % 2 == 1 ? CalendarDayView.oddMonthBackgroundColor : CalendarDayView.evenMonthBackgroundColor
+        params.textColor = CalendarDayView.textColor
+        params.selectionColor = nil
+
+        if isHighlighted || isSelected {
+            params.textColor = CalendarDayView.selectionTextColor
+            params.selectionColor = isHighlighted ? CalendarDayView.highlightBackgroundColor : CalendarDayView.selectionBackgroundColor
+        } else
+            if isToday {
+                params.backgroundColor = CalendarDayView.todayBackgroundColor
+                params.textColor = CalendarDayView.todayTextColor
+            }
+        
+        return params
     }
     
     // MARK: Touch
