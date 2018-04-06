@@ -20,7 +20,8 @@ class CalendarController: UIViewController {
     private static let calendarViewExpandedWeeks = 5
 
     private static let selectedDateColor = UIColor(red: 0, green: 0.47, blue: 0.85, alpha: 1)
-    
+    private static let separatorColor = UIColor(red: 0.88, green: 0.88, blue: 0.89, alpha: 1)
+
     private static let agendaSectionHeaderFont = UIFont.preferredFont(forTextStyle: .subheadline)
     private static let agendaSectionHeaderBackgroundColor = UIColor(red: 0.97, green: 0.97, blue: 0.98, alpha: 1)
     private static let agendaSectionHeaderTextColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
@@ -49,10 +50,14 @@ class CalendarController: UIViewController {
         let agendaView = UITableView()
         agendaView.scrollsToTop = false
         agendaView.sectionHeaderHeight = CalendarController.agendaSectionHeaderHeight
+        agendaView.separatorColor = CalendarController.separatorColor
+        agendaView.separatorInset = .zero
         agendaView.showsVerticalScrollIndicator = false
         agendaView.dataSource = self
         agendaView.delegate = self
         agendaView.register(AgendaCell.self, forCellReuseIdentifier: AgendaCell.identifier)
+        agendaView.register(EmptyAgendaCell.self, forCellReuseIdentifier: EmptyAgendaCell.identifier)
+        agendaView.register(AgendaHeaderView.self, forHeaderFooterViewReuseIdentifier: AgendaHeaderView.identifier)
         return agendaView
     }()
     
@@ -160,17 +165,25 @@ extension CalendarController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //!!!
-        return 1
+        let sectionDate = date(forAgendaSection: section)
+        return max(1, CalendarEvents.shared.events[sectionDate]?.count ?? 0)
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return CalendarFormatter.fullString(from: date(forAgendaSection: section))
     }
     
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return tableView.dequeueReusableHeaderFooterView(withIdentifier: AgendaHeaderView.identifier) as! AgendaHeaderView
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //!!!
+        let sectionDate = date(forAgendaSection: indexPath.section)
+        guard let events = CalendarEvents.shared.events[sectionDate], !events.isEmpty else {
+            return tableView.dequeueReusableCell(withIdentifier: EmptyAgendaCell.identifier, for: indexPath)
+        }
         let cell = tableView.dequeueReusableCell(withIdentifier: AgendaCell.identifier, for: indexPath) as! AgendaCell
+        cell.initialize(event: events[indexPath.row])
         return cell
     }
     
@@ -179,6 +192,7 @@ extension CalendarController: UITableViewDataSource, UITableViewDelegate {
             return
         }
         let dateIsToday = date(forAgendaSection: section).isToday
+        // font/backgroundColor have to be set here instead of AgendaHeaderView because otherwise they will be overwritten by UIKit
         headerView.textLabel?.font = CalendarController.agendaSectionHeaderFont
         headerView.textLabel?.textColor = dateIsToday ? CalendarController.agendaSectionHeaderTodayTextColor : CalendarController.agendaSectionHeaderTextColor
         headerView.backgroundView?.backgroundColor = dateIsToday ? CalendarController.agendaSectionHeaderTodayBackgroundColor : CalendarController.agendaSectionHeaderBackgroundColor

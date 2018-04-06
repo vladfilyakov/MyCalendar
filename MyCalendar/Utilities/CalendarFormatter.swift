@@ -20,6 +20,12 @@ class CalendarFormatter {
         return dateFormatter
     }()
     
+    private static let durationFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .abbreviated
+        return formatter
+    }()
+
     private static let monthFormatterWithYear: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.setLocalizedDateFormatFromTemplate("MMMM yyyy")
@@ -43,6 +49,17 @@ class CalendarFormatter {
         return dateFormatter
     }()
     
+    private static let timeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        return formatter
+    }()
+    
+    static func durationString(from timeInterval: TimeInterval) -> String {
+        return durationFormatter.string(from: timeInterval)!
+    }
+
     static func fullMonthString(from date: Date) -> String {
         let formatter = date.isInCurrentYear ? monthFormatterWithoutYear : monthFormatterWithYear
         return formatter.string(from: date)
@@ -63,6 +80,10 @@ class CalendarFormatter {
     
     static func string(from number: Int) -> String {
         return numberFormatter.string(from: NSNumber(value: number))!
+    }
+    
+    static func timeString(from date: Date) -> String {
+        return timeFormatter.string(from: date)
     }
     
     private static func relativeDayName(from date: Date) -> String? {

@@ -6,6 +6,11 @@
   Copyright © 2018 Vlad Filyakov. All rights reserved.
 */
 
+/* Events */
+"Events.None" = "No events";
+
+/* RelativeDayName */
+
 "RelativeDayName.Yesterday" = "Yesterday";
 "RelativeDayName.Today" = "Today";
 "RelativeDayName.Tomorrow" = "Tomorrow";
