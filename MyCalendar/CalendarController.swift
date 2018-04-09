@@ -107,6 +107,10 @@ class CalendarController: UIViewController {
 // MARK: - CalendarController: AgendaViewDelegate
 
 extension CalendarController: AgendaViewDelegate {
+    func agendaView(_ view: AgendaView, eventsForDate date: Date) -> [CalendarEvent]? {
+        return CalendarEvents.shared.events[date]
+    }
+    
     func agendaView(_ view: AgendaView, didScrollToDate date: Date) {
         setSelectedDate(date, excludingAgenda: true, animated: true)
     }

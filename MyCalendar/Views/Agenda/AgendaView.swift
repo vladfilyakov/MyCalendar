@@ -10,9 +10,11 @@ import UIKit
 
 // MARK: AgendaViewDelegate
 
-@objc protocol AgendaViewDelegate: class {
-    @objc optional func agendaView(_ view: AgendaView, didScrollToDate date: Date)
-    @objc optional func agendaViewWillBeginDragging(_ view: AgendaView)
+protocol AgendaViewDelegate: class {
+    func agendaView(_ view: AgendaView, eventsForDate date: Date) -> [CalendarEvent]?
+    
+    func agendaView(_ view: AgendaView, didScrollToDate date: Date)
+    func agendaViewWillBeginDragging(_ view: AgendaView)
 }
 
 // MARK: - AgendaView
@@ -96,12 +98,12 @@ extension AgendaView: UITableViewDataSource, UITableViewDelegate {
         var checkPoint = tableView.contentOffset
         checkPoint.y += tableView.sectionHeaderHeight
         if let topIndexPath = tableView.indexPathForRow(at: checkPoint) {
-            delegate?.agendaView?(self, didScrollToDate: date(forEventSection: topIndexPath.section))
+            delegate?.agendaView(self, didScrollToDate: date(forEventSection: topIndexPath.section))
         }
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        delegate?.agendaViewWillBeginDragging?(self)
+        delegate?.agendaViewWillBeginDragging(self)
     }
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
@@ -128,7 +130,7 @@ extension AgendaView: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sectionDate = date(forEventSection: section)
-        return max(1, CalendarEvents.shared.events[sectionDate]?.count ?? 0)
+        return max(1, events(for: sectionDate)?.count ?? 0)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -178,10 +180,14 @@ extension AgendaView: UITableViewDataSource, UITableViewDelegate {
     
     private func eventForRow(at indexPath: IndexPath) -> CalendarEvent? {
         let sectionDate = date(forEventSection: indexPath.section)
-        if let events = CalendarEvents.shared.events[sectionDate], !events.isEmpty {
+        if let events = events(for: sectionDate), !events.isEmpty {
             return events[indexPath.row]
         } else {
             return nil
         }
+    }
+    
+    private func events(for date: Date) -> [CalendarEvent]? {
+        return delegate?.agendaView(self, eventsForDate: date)
     }
 }
