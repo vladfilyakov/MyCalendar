@@ -26,6 +26,7 @@
 		A5B5A723207702DE00578966 /* EmptyAgendaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B5A722207702DE00578966 /* EmptyAgendaCell.swift */; };
 		A5DFCB5B206B65960093D9F2 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5DFCB5A206B65960093D9F2 /* UIView+Extension.swift */; };
 		A5F2E527206F4E7900106F71 /* AgendaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F2E526206F4E7900106F71 /* AgendaCell.swift */; };
+		A5F87258207B47A000D488E9 /* AgendaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F87257207B47A000D488E9 /* AgendaView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,7 @@
 		A5B5A722207702DE00578966 /* EmptyAgendaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyAgendaCell.swift; sourceTree = "<group>"; };
 		A5DFCB5A206B65960093D9F2 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		A5F2E526206F4E7900106F71 /* AgendaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgendaCell.swift; sourceTree = "<group>"; };
+		A5F87257207B47A000D488E9 /* AgendaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgendaView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,6 +180,7 @@
 			children = (
 				A5F2E526206F4E7900106F71 /* AgendaCell.swift */,
 				A5B5A720207702AF00578966 /* AgendaHeaderView.swift */,
+				A5F87257207B47A000D488E9 /* AgendaView.swift */,
 				A5B5A722207702DE00578966 /* EmptyAgendaCell.swift */,
 			);
 			path = Agenda;
@@ -292,6 +295,7 @@
 				A54A394F20637F6A00CA6EBD /* CalendarController.swift in Sources */,
 				A592987D2064DF7A005E1F4D /* CalendarWeekCell.swift in Sources */,
 				A5B5A721207702AF00578966 /* AgendaHeaderView.swift in Sources */,
+				A5F87258207B47A000D488E9 /* AgendaView.swift in Sources */,
 				A54A394D20637F6A00CA6EBD /* AppDelegate.swift in Sources */,
 				A592987F2064E220005E1F4D /* CalendarHeaderView.swift in Sources */,
 				A592988F206A36AE005E1F4D /* CalendarDayView.swift in Sources */,

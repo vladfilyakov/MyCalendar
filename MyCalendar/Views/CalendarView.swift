@@ -33,7 +33,7 @@ class CalendarView: UIView {
         let futureWeeks = pastWeeks
         totalWeeks = pastWeeks + 1 + futureWeeks
         maxDate = minDate.addingDays(totalWeeks * 7 - 1)
-        super.init(frame: .zero)
+        super.init(frame: frame)
         initLayout()
     }
     required init?(coder aDecoder: NSCoder) {
@@ -162,7 +162,7 @@ class CalendarView: UIView {
     }
 }
 
-// MARK: - CalendarView: UITableViewDataSource, UITableViewDelegate - for Day View
+// MARK: - CalendarView: UITableViewDataSource, UITableViewDelegate - for Day view
 
 extension CalendarView: UITableViewDataSource, UITableViewDelegate {
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {

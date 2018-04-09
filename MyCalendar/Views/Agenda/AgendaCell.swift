@@ -19,7 +19,7 @@ class AgendaCell: UITableViewCell {
     private static let infoContainerSpacing: CGFloat = 7
     private static let locationContainerSpacing: CGFloat = 3
     private static let locationIconSize: CGFloat = 16
-    private static let separatorWidth = UIScreen.main.devicePixel
+    private static let separatorThickness = UIScreen.main.devicePixel
     private static let subjectNumberOfLines = 2
     private static let timeContainerSpacing: CGFloat = 4
     // TODO: Calculate wider width for Large Text
@@ -55,7 +55,7 @@ class AgendaCell: UITableViewCell {
             infoContainerHeight += infoContainerSpacing + max(locationIconSize, UIScreen.main.roundToDevicePixels(locationFont.lineHeight))
         }
         
-        return 2 * verticalMargin + max(timeContainerHeight, infoContainerHeight) + separatorWidth
+        return 2 * verticalMargin + max(timeContainerHeight, infoContainerHeight) + separatorThickness
     }
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
