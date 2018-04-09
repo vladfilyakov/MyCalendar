@@ -151,7 +151,13 @@ extension CalendarController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if !isScrollingAgendaView, let topIndexPath = (scrollView as? UITableView)?.indexPathsForVisibleRows?.first {
+        guard !isScrollingAgendaView, let tableView = scrollView as? UITableView else {
+            return
+        }
+        // Checkpoint is a bottom of the top section header
+        var checkPoint = tableView.contentOffset
+        checkPoint.y += tableView.sectionHeaderHeight
+        if let topIndexPath = tableView.indexPathForRow(at: checkPoint) {
             setSelectedDate(date(forAgendaSection: topIndexPath.section), excludingAgenda: true, animated: true)
         }
     }
