@@ -9,6 +9,8 @@
 import UIKit
 
 protocol CalendarWeekCellDelegate: class {
+    func calendarWeekCell(_ cell: CalendarWeekCell, eventCountForDate date: Date) -> Int
+    
     func calendarWeekCell(_ cell: CalendarWeekCell, wasTappedOnDate date: Date)
 }
 
@@ -34,7 +36,7 @@ class CalendarWeekCell: UITableViewCell {
     
     private(set) var weekStartDate: Date!
     
-    weak var delegate: CalendarWeekCellDelegate?
+    private weak var delegate: CalendarWeekCellDelegate!
     
     private lazy var dayViews: [CalendarDayView] = {
         var dayViews = [CalendarDayView]()
@@ -48,13 +50,20 @@ class CalendarWeekCell: UITableViewCell {
         return dayViews
     }()
     
-    func initialize(weekStartDate: Date, selectedDate: Date?) {
+    func initialize(weekStartDate: Date, selectedDate: Date?, showsEventIndicators: Bool, delegate: CalendarWeekCellDelegate) {
         self.weekStartDate = weekStartDate
+        self.delegate = delegate
         for i in 0..<dayViews.count {
             let dayView = dayViews[i]
             dayView.date = weekStartDate.addingDays(i)
+            dayView.eventCount = eventCount(for: dayView.date)
             dayView.isSelected = dayView.date == selectedDate
+            dayView.showEventIndicator(showsEventIndicators, animated: false)
         }
+    }
+    
+    func showEventIndicators(_ visible: Bool, animated: Bool) {
+        dayViews.forEach { $0.showEventIndicator(visible, animated: animated) }
     }
     
     private func initLayout() {
@@ -67,6 +76,10 @@ class CalendarWeekCell: UITableViewCell {
     }
     
     private func dayViewTapped(_ dayView: CalendarDayView) {
-        delegate?.calendarWeekCell(self, wasTappedOnDate: dayView.date)
+        delegate.calendarWeekCell(self, wasTappedOnDate: dayView.date)
+    }
+    
+    private func eventCount(for date: Date) -> Int {
+        return delegate.calendarWeekCell(self, eventCountForDate: date)
     }
 }

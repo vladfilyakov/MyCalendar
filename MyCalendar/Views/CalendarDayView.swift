@@ -9,11 +9,15 @@
 import UIKit
 
 class CalendarDayView: UIView {
+    private static let showEventIndicatorAnimationDuration: TimeInterval = 0.2
+    
 //    private static let dayTextVerticalMargin: CGFloat = 14
 //    static var height: CGFloat {
 //        // TODO: Support Large Fonts
 //        return UIScreen.main.roundToDevicePixels(2 * dayTextVerticalMargin + dayTextFont.lineHeight)
 //    }
+    private static let eventIndicatorBottomMargin: CGFloat = 7
+    private static let eventIndicatorRadius: CGFloat = 2
     private static let selectionIndicatorMargin: CGFloat = 5
     
     private static let dayTextFont = UIFont.systemFont(ofSize: 17)
@@ -24,12 +28,19 @@ class CalendarDayView: UIView {
 
     private static let oddMonthBackgroundColor = UIColor(red: 0.97, green: 0.97, blue: 0.98, alpha: 1)
     private static let evenMonthBackgroundColor = UIColor.white
+    private static let eventIndicatorColor = textColor
+    private static let eventIndicatorColorLevels = 4
     private static let highlightBackgroundColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
     private static let selectionBackgroundColor = selectedDateColor
     private static let selectionTextColor = UIColor.white
     private static let textColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
     private static let todayBackgroundColor = UIColor(red: 0.95, green: 0.98, blue: 0.99, alpha: 1)
     private static let todayTextColor = selectedDateColor
+    
+    private static func eventIndicatorColor(for eventCount: Int) -> UIColor {
+        let alpha = CGFloat(min(eventCount, eventIndicatorColorLevels)) / CGFloat(eventIndicatorColorLevels)
+        return eventIndicatorColor.withAlphaComponent(alpha)
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -61,6 +72,13 @@ class CalendarDayView: UIView {
             }
         }
     }
+    var eventCount: Int = 0 {
+        didSet {
+            if eventCount != oldValue {
+                updateView()
+            }
+        }
+    }
     var isSelected: Bool = false {
         didSet {
             if isSelected != oldValue {
@@ -78,6 +96,17 @@ class CalendarDayView: UIView {
     }
     
     var tapped: (() -> Void)?
+    
+    func showEventIndicator(_ visible: Bool, animated: Bool) {
+        let action = {
+            self.eventIndicator.alpha = visible ? 1 : 0
+        }
+        if animated {
+            UIView.animate(withDuration: CalendarDayView.showEventIndicatorAnimationDuration, animations: action)
+        } else {
+            action()
+        }
+    }
     
     // MARK: Layout
     
@@ -108,6 +137,14 @@ class CalendarDayView: UIView {
         label.textAlignment = .center
         label.textColor = CalendarDayView.textColor
         return label
+    }()
+    private let eventIndicator: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = CalendarDayView.eventIndicatorRadius
+        view.isUserInteractionEnabled = false
+        view.widthAnchor.constraint(equalToConstant: 2 * CalendarDayView.eventIndicatorRadius).isActive = true
+        view.heightAnchor.constraint(equalToConstant: 2 * CalendarDayView.eventIndicatorRadius).isActive = true
+        return view
     }()
     private var selectionIndicator: UIView? {
         didSet {
@@ -145,6 +182,12 @@ class CalendarDayView: UIView {
         labelContainer.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         labelContainer.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         labelContainer.topAnchor.constraint(greaterThanOrEqualTo: topAnchor).isActive = true
+        
+        eventIndicator.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(eventIndicator)
+        eventIndicator.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        eventIndicator.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -CalendarDayView.eventIndicatorBottomMargin).isActive = true
+        showEventIndicator(false, animated: false)
     }
     
     private func updateSelectionIndicatorSize() {
@@ -165,19 +208,28 @@ class CalendarDayView: UIView {
             fatalError("Unexpected")
         }
         
-        monthLabel.isHidden = !(day == 1) || isHighlighted || isSelected
-        if !monthLabel.isHidden {
+        let showsMonth = day == 1 && !(isHighlighted || isSelected)
+        let showsYear = day == 1 && year != Calendar.current.component(.year, from: Date()) && !(isHighlighted || isSelected)
+        let showsEventIndicator = !showsMonth && !showsYear && !(isHighlighted || isSelected)
+        let presentationParams = self.presentationParams(month: month, isToday: date.isToday)
+
+        monthLabel.isHidden = !showsMonth
+        if showsMonth {
             monthLabel.text = CalendarFormatter.shortMonthString(from: date)
         }
         
         dayLabel.text = CalendarFormatter.string(from: day)
         
-        yearLabel.isHidden = !(day == 1 && year != Calendar.current.component(.year, from: Date())) || isHighlighted || isSelected
-        if !yearLabel.isHidden {
+        yearLabel.isHidden = !showsYear
+        if showsYear {
             yearLabel.text = CalendarFormatter.string(from: year)
         }
         
-        let presentationParams = self.presentationParams(month: month, isToday: date.isToday)
+        eventIndicator.isHidden = !showsEventIndicator
+        if showsEventIndicator {
+            eventIndicator.backgroundColor = presentationParams.eventIndicatorColor
+        }
+
         backgroundColor = presentationParams.backgroundColor
         dayLabel.textColor = presentationParams.textColor
         if let selectionColor = presentationParams.selectionColor {
@@ -190,12 +242,13 @@ class CalendarDayView: UIView {
         }
     }
     
-    private func presentationParams(month: Int, isToday: Bool) -> (backgroundColor: UIColor, textColor: UIColor, selectionColor: UIColor?) {
-        var params: (backgroundColor: UIColor, textColor: UIColor, selectionColor: UIColor?)
+    private func presentationParams(month: Int, isToday: Bool) -> (backgroundColor: UIColor, textColor: UIColor, selectionColor: UIColor?, eventIndicatorColor: UIColor) {
+        var params: (backgroundColor: UIColor, textColor: UIColor, selectionColor: UIColor?, eventIndicatorColor: UIColor)
         
         params.backgroundColor = month % 2 == 1 ? CalendarDayView.oddMonthBackgroundColor : CalendarDayView.evenMonthBackgroundColor
         params.textColor = CalendarDayView.textColor
         params.selectionColor = nil
+        params.eventIndicatorColor = CalendarDayView.eventIndicatorColor(for: eventCount)
 
         if isHighlighted || isSelected {
             params.textColor = CalendarDayView.selectionTextColor

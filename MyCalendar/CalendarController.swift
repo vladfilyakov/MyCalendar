@@ -51,6 +51,7 @@ class CalendarController: UIViewController {
                 isCalendarViewExpanded ? CalendarController.calendarViewExpandedWeeks : CalendarController.calendarViewNormalWeeks,
                 animated: true
             )
+            calendarView.setShowsEventIndicators(isCalendarViewExpanded, animated: true)
         }
     }
 
@@ -123,6 +124,10 @@ extension CalendarController: AgendaViewDelegate {
 // MARK: - CalendarController: CalendarViewDelegate
 
 extension CalendarController: CalendarViewDelegate {
+    func calendarView(_ view: CalendarView, eventCountForDate date: Date) -> Int {
+        return CalendarEvents.shared.events[date]?.count ?? 0
+    }
+    
     func calendarView(_ view: CalendarView, didSelectDate date: Date?) {
         setSelectedDate(date, animated: true)
     }

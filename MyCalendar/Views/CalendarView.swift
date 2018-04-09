@@ -16,7 +16,9 @@ import UIKit
 // MARK: - CalendarViewDelegate
 
 @objc protocol CalendarViewDelegate: class {
-    func calendarView(_ view: CalendarView, didSelectDate date: Date?)
+    @objc optional func calendarView(_ view: CalendarView, eventCountForDate date: Date) -> Int
+    
+    @objc optional func calendarView(_ view: CalendarView, didSelectDate date: Date?)
     @objc optional func calendarViewWillBeginDragging(_ view: CalendarView)
 }
 
@@ -50,7 +52,12 @@ class CalendarView: UIView {
         get { return _selectedDate }
         set { setSelectedDate(newValue, animated: false) }
     }
-    
+    private var _showsEventIndicators: Bool = false
+    var showsEventIndicators: Bool {
+        get { return _showsEventIndicators }
+        set { setShowsEventIndicators(newValue, animated: false) }
+    }
+
     let minDate: Date
     let maxDate: Date
     private let totalWeeks: Int
@@ -136,6 +143,14 @@ class CalendarView: UIView {
         }
     }
     
+    func setShowsEventIndicators(_ showsEventIndicators: Bool, animated: Bool) {
+        if self.showsEventIndicators == showsEventIndicators {
+            return
+        }
+        _showsEventIndicators = showsEventIndicators
+        dayView.visibleCells.forEach { ($0 as? CalendarWeekCell)?.showEventIndicators(self.showsEventIndicators, animated: animated) }
+    }
+    
     private func initLayout() {
         addSubview(dayView)
         // headerView should be after dayView because it needs to show a separator/shadow over dayView
@@ -185,8 +200,7 @@ extension CalendarView: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CalendarWeekCell.identifier, for: indexPath) as! CalendarWeekCell
-        cell.initialize(weekStartDate: minDate.addingDays(indexPath.row * 7), selectedDate: selectedDate)
-        cell.delegate = self
+        cell.initialize(weekStartDate: minDate.addingDays(indexPath.row * 7), selectedDate: selectedDate, showsEventIndicators: showsEventIndicators, delegate: self)
         return cell
     }
     
@@ -201,7 +215,7 @@ extension CalendarView: UITableViewDataSource, UITableViewDelegate {
     
     private func updateCell(for date: Date?) {
         if let date = date, let indexPath = indexPath(for: date), let cell = dayView.cellForRow(at: indexPath) as? CalendarWeekCell {
-            cell.initialize(weekStartDate: cell.weekStartDate, selectedDate: selectedDate)
+            cell.initialize(weekStartDate: cell.weekStartDate, selectedDate: selectedDate, showsEventIndicators: showsEventIndicators, delegate: self)
         }
     }
 }
@@ -209,11 +223,15 @@ extension CalendarView: UITableViewDataSource, UITableViewDelegate {
 // MARK: - CalendarView: CalendarWeekCellDelegate - for Day View cells
 
 extension CalendarView: CalendarWeekCellDelegate {
+    func calendarWeekCell(_ cell: CalendarWeekCell, eventCountForDate date: Date) -> Int {
+        return delegate?.calendarView?(self, eventCountForDate: date) ?? 0
+    }
+    
     func calendarWeekCell(_ cell: CalendarWeekCell, wasTappedOnDate date: Date) {
         let oldSelectedDate = selectedDate
         selectedDate = date
         if selectedDate != oldSelectedDate {
-            delegate?.calendarView(self, didSelectDate: selectedDate)
+            delegate?.calendarView?(self, didSelectDate: selectedDate)
         }
     }
 }
