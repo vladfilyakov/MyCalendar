@@ -15,6 +15,7 @@ import UIKit
 class CalendarController: UIViewController {
     // Outlook has a fixed agenda section header height
     private static let agendaSectionHeaderHeight: CGFloat = 26
+    private static let separatorWidth = UIScreen.main.devicePixel
     
     private static let calendarViewNormalWeeks = 2
     private static let calendarViewExpandedWeeks = 5
@@ -48,6 +49,9 @@ class CalendarController: UIViewController {
     }()
     private(set) lazy var agendaView: UITableView = {
         let agendaView = UITableView()
+        agendaView.allowsSelection = false
+        agendaView.estimatedRowHeight = 0
+        agendaView.estimatedSectionHeaderHeight = 0
         agendaView.scrollsToTop = false
         agendaView.sectionHeaderHeight = CalendarController.agendaSectionHeaderHeight
         agendaView.separatorColor = CalendarController.separatorColor
@@ -112,8 +116,8 @@ class CalendarController: UIViewController {
     
     private func createBottomSeparator(for view: UIView) -> UIView {
         var frame = view.bounds
-        frame.origin.y = frame.maxY - UIScreen.main.devicePixel
-        frame.size.height = UIScreen.main.devicePixel
+        frame.origin.y = frame.maxY - CalendarController.separatorWidth
+        frame.size.height = CalendarController.separatorWidth
         
         let separator = UIView(frame: frame)
         separator.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
@@ -157,7 +161,21 @@ extension CalendarController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        // TODO: scroll to the whole cell
+        guard let tableView = scrollView as? UITableView, let targetIndexPath = tableView.indexPathForRow(at: targetContentOffset.pointee) else {
+            return
+        }
+        let targetCellRect = tableView.rectForRow(at: targetIndexPath)
+        // Checkpoint is a bottom of the top section header
+        if targetContentOffset.pointee.y + tableView.sectionHeaderHeight < targetCellRect.midY {
+            // Need to scroll to the top of the section header otherwise the row will be covered by it
+            targetContentOffset.pointee.y = targetCellRect.minY - tableView.sectionHeaderHeight
+        } else {
+            targetContentOffset.pointee.y = targetCellRect.maxY
+            // For the last row in section its bottom is a top of the next section header, otherwise the previous comment applies
+            if targetIndexPath.row < tableView.numberOfRows(inSection: targetIndexPath.section) - 1 {
+                targetContentOffset.pointee.y -= tableView.sectionHeaderHeight
+            }
+        }
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -169,6 +187,14 @@ extension CalendarController: UITableViewDataSource, UITableViewDelegate {
         return max(1, CalendarEvents.shared.events[sectionDate]?.count ?? 0)
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if let event = eventForRow(at: indexPath) {
+            return AgendaCell.height(for: event, maxWidth: tableView.bounds.width)
+        } else {
+            return EmptyAgendaCell.height
+        }
+    }
+    
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return CalendarFormatter.fullString(from: date(forAgendaSection: section))
     }
@@ -178,13 +204,13 @@ extension CalendarController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let sectionDate = date(forAgendaSection: indexPath.section)
-        guard let events = CalendarEvents.shared.events[sectionDate], !events.isEmpty else {
+        if let event = eventForRow(at: indexPath) {
+            let cell = tableView.dequeueReusableCell(withIdentifier: AgendaCell.identifier, for: indexPath) as! AgendaCell
+            cell.initialize(event: event)
+            return cell
+        } else {
             return tableView.dequeueReusableCell(withIdentifier: EmptyAgendaCell.identifier, for: indexPath)
         }
-        let cell = tableView.dequeueReusableCell(withIdentifier: AgendaCell.identifier, for: indexPath) as! AgendaCell
-        cell.initialize(event: events[indexPath.row])
-        return cell
     }
     
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
@@ -198,11 +224,20 @@ extension CalendarController: UITableViewDataSource, UITableViewDelegate {
         headerView.backgroundView?.backgroundColor = dateIsToday ? CalendarController.agendaSectionHeaderTodayBackgroundColor : CalendarController.agendaSectionHeaderBackgroundColor
     }
     
+    private func agendaSection(for date: Date) -> Int {
+        return date.daysSince(calendarView.minDate)
+    }
+    
     private func date(forAgendaSection section: Int) -> Date {
         return calendarView.minDate.addingDays(section)
     }
     
-    private func agendaSection(for date: Date) -> Int {
-        return date.daysSince(calendarView.minDate)
+    private func eventForRow(at indexPath: IndexPath) -> CalendarEvent? {
+        let sectionDate = date(forAgendaSection: indexPath.section)
+        if let events = CalendarEvents.shared.events[sectionDate], !events.isEmpty {
+            return events[indexPath.row]
+        } else {
+            return nil
+        }
     }
 }

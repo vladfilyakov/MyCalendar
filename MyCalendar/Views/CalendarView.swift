@@ -67,8 +67,8 @@ class CalendarView: UIView {
     private lazy var dayView: UITableView = {
         let dayView = UITableView(frame: .zero, style: .plain)
         dayView.allowsSelection = false
+        dayView.estimatedRowHeight = 0
         dayView.rowHeight = CalendarWeekCell.height
-        dayView.estimatedRowHeight = dayView.rowHeight
         dayView.scrollsToTop = false
         dayView.separatorColor = CalendarWeekCell.separatorColor
         dayView.separatorInset = .zero

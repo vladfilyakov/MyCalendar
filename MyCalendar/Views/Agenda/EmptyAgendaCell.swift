@@ -11,6 +11,13 @@ import UIKit
 class EmptyAgendaCell: UITableViewCell {
     static let identifier = "EmptyAgendaCell"
     
+    static var height: CGFloat {
+        // Match for standard height
+        return 2 * verticalMargin + ceil(font.lineHeight)
+    }
+    private static let horizontalMargin: CGFloat = 16
+    private static let verticalMargin: CGFloat = 13
+    
     private static let font = UIFont.preferredFont(forTextStyle: .subheadline)
     private static let textColor = UIColor(red: 0.65, green: 0.66, blue: 0.67, alpha: 1)
     
@@ -26,6 +33,6 @@ class EmptyAgendaCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        textLabel?.frame = contentView.bounds.insetBy(dx: contentView.layoutMargins.left, dy: 0)
+        textLabel?.frame = contentView.bounds.insetBy(dx: EmptyAgendaCell.horizontalMargin, dy: 0)
     }
 }

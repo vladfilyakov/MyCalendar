@@ -11,8 +11,10 @@ import UIKit
 class AgendaHeaderView: UITableViewHeaderFooterView {
     static let identifier = "AgendaHeaderView"
     
+    private static let horizontalMargin: CGFloat = 16
+    
     override func layoutSubviews() {
         super.layoutSubviews()
-        contentView.frame = bounds.insetBy(dx: layoutMargins.left, dy: 0)
+        contentView.frame = bounds.insetBy(dx: AgendaHeaderView.horizontalMargin, dy: 0)
     }
 }

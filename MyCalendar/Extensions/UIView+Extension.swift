@@ -9,24 +9,15 @@
 import UIKit
 
 extension UIView {
-    func fitIntoSuperview(usingMargins: Bool = false) {
+    func fitIntoSuperview() {
         guard let container = superview else {
             return
         }
         translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint(item: self, attribute: .leading, relatedBy: .equal,
-                           toItem: container, attribute: usingMargins ? .leadingMargin : .leading,
-                           multiplier: 1, constant: 0).isActive = true
-        NSLayoutConstraint(item: self, attribute: .trailing, relatedBy: .equal,
-                           toItem: container, attribute: usingMargins ? .trailingMargin : .trailing,
-                           multiplier: 1, constant: 0).isActive = true
-        NSLayoutConstraint(item: self, attribute: .top, relatedBy: .equal,
-                           toItem: container, attribute: usingMargins ? .topMargin : .top,
-                           multiplier: 1, constant: 0).isActive = true
-        NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal,
-                           toItem: container, attribute: usingMargins ? .bottomMargin : .bottom,
-                           multiplier: 1, constant: 0).isActive = true
-
+        leadingAnchor.constraint(equalTo: container.leadingAnchor).isActive = true
+        trailingAnchor.constraint(equalTo: container.trailingAnchor).isActive = true
+        topAnchor.constraint(equalTo: container.topAnchor).isActive = true
+        bottomAnchor.constraint(equalTo: container.bottomAnchor).isActive = true
     }
     
     func fitSubviewsHorizontally(_ subviews: [UIView]) {

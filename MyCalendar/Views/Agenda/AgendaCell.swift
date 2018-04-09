@@ -9,16 +9,20 @@
 import UIKit
 
 // TODO: Highlight the current event (hapenning right now)
+// TODO: Show time left before next upcoming event
 
 class AgendaCell: UITableViewCell {
     static let identifier = "AgendaCell"
     
-    private static let extraVerticalMargin: CGFloat = 7
+    private static let horizontalMargin: CGFloat = 16
+    private static let verticalMargin: CGFloat = 15
     private static let infoContainerSpacing: CGFloat = 7
     private static let locationContainerSpacing: CGFloat = 3
     private static let locationIconSize: CGFloat = 16
+    private static let separatorWidth = UIScreen.main.devicePixel
     private static let subjectNumberOfLines = 2
     private static let timeContainerSpacing: CGFloat = 4
+    // TODO: Calculate wider width for Large Text
     private static let timeContainerWidth: CGFloat = 70
     
     private static let durationFont = UIFont.preferredFont(forTextStyle: .caption1)
@@ -30,6 +34,29 @@ class AgendaCell: UITableViewCell {
     private static let locationTextColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
     private static let startTextColor = subjectTextColor
     private static let subjectTextColor = UIColor(white: 0.13, alpha: 1)
+    
+    static func height(for event: CalendarEvent, maxWidth: CGFloat) -> CGFloat {
+        let timeContainerHeight = UIScreen.main.roundToDevicePixels(startFont.lineHeight) + timeContainerSpacing + UIScreen.main.roundToDevicePixels(durationFont.lineHeight)
+        
+        let maxContentWidth = max(0, maxWidth - 2 * horizontalMargin)
+        let maxSubjectWidth = max(0, maxContentWidth - timeContainerWidth)
+        let maxSubjectHeight = UIScreen.main.roundToDevicePixels(CGFloat(subjectNumberOfLines) * subjectFont.lineHeight + CGFloat(subjectNumberOfLines - 1) * subjectFont.leading)
+        let rect = (event.subject as NSString).boundingRect(
+            with: CGSize(width: maxSubjectWidth, height: maxSubjectHeight),
+            options: [.usesLineFragmentOrigin],
+            attributes: [.font : subjectFont],
+            context: nil
+        )
+        var infoContainerHeight = UIScreen.main.roundToDevicePixels(rect.height)
+        // Compensation for baseline alignment
+        infoContainerHeight -= UIScreen.main.roundToDevicePixels(subjectFont.ascender - startFont.ascender)
+        
+        if !event.location.isEmpty {
+            infoContainerHeight += infoContainerSpacing + max(locationIconSize, UIScreen.main.roundToDevicePixels(locationFont.lineHeight))
+        }
+        
+        return 2 * verticalMargin + max(timeContainerHeight, infoContainerHeight) + separatorWidth
+    }
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -85,7 +112,12 @@ class AgendaCell: UITableViewCell {
         container.axis = .horizontal
         container.alignment = .firstBaseline
         container.isLayoutMarginsRelativeArrangement = true
-        container.layoutMargins = UIEdgeInsets(top: AgendaCell.extraVerticalMargin, left: 0, bottom: AgendaCell.extraVerticalMargin, right: 0)
+        container.layoutMargins = UIEdgeInsets(
+            top: AgendaCell.verticalMargin,
+            left: AgendaCell.horizontalMargin,
+            bottom: AgendaCell.verticalMargin,
+            right: AgendaCell.horizontalMargin
+        )
         return container
     }()
     private lazy var infoContainer: UIStackView = {
@@ -97,6 +129,7 @@ class AgendaCell: UITableViewCell {
     private lazy var locationContainer: UIStackView = {
         let container = UIStackView(arrangedSubviews: [locationIcon, locationLabel])
         container.axis = .horizontal
+        container.alignment = .center
         container.spacing = AgendaCell.locationContainerSpacing
         return container
     }()
@@ -110,6 +143,6 @@ class AgendaCell: UITableViewCell {
 
     private func initLayout() {
         contentView.addSubview(container)
-        container.fitIntoSuperview(usingMargins: true)
+        container.fitIntoSuperview()
     }
 }
