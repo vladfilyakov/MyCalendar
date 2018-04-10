@@ -9,6 +9,8 @@
 import XCTest
 @testable import MyCalendar
 
+// TODO: Add test coverage
+
 class MyCalendarTests: XCTestCase {
     
     override func setUp() {
