@@ -30,10 +30,10 @@ class AgendaCell: UITableViewCell {
     private static let startFont = UIFont.preferredFont(forTextStyle: .caption1)
     private static let subjectFont = UIFont.preferredFont(forTextStyle: .subheadline)
 
-    private static let durationTextColor = Colors.textColor3
-    private static let locationTextColor = Colors.textColor2
-    private static let startTextColor = Colors.textColor1
-    private static let subjectTextColor = Colors.textColor1
+    private static let durationTextColor = Colors.text3
+    private static let locationTextColor = Colors.text2
+    private static let startTextColor = Colors.text1
+    private static let subjectTextColor = Colors.text1
     
     static func height(for event: CalendarEvent, maxWidth: CGFloat) -> CGFloat {
         let timeContainerHeight = UIScreen.main.roundToDevicePixels(startFont.lineHeight) + timeContainerSpacing + UIScreen.main.roundToDevicePixels(durationFont.lineHeight)

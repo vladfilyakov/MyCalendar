@@ -19,7 +19,7 @@ class EmptyAgendaCell: UITableViewCell {
     private static let verticalMargin: CGFloat = 13
     
     private static let font = UIFont.preferredFont(forTextStyle: .subheadline)
-    private static let textColor = Colors.textColor3
+    private static let textColor = Colors.text3
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

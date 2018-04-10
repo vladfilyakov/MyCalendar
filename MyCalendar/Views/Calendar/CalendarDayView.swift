@@ -19,16 +19,16 @@ class CalendarDayView: UIView {
     private static let monthTextFont = UIFont.preferredFont(forTextStyle: .footnote)
     private static let yearTextFont = UIFont.preferredFont(forTextStyle: .footnote)
 
-    private static let oddMonthBackgroundColor = Colors.backgroundColor2
-    private static let evenMonthBackgroundColor = Colors.backgroundColor1
-    private static let eventIndicatorColor = Colors.textColor2
+    private static let oddMonthBackgroundColor = Colors.background2
+    private static let evenMonthBackgroundColor = Colors.background1
+    private static let eventIndicatorColor = Colors.text2
     private static let eventIndicatorColorLevels = 4
-    private static let highlightBackgroundColor = Colors.textColor2
-    private static let selectionBackgroundColor = Colors.selectionColor1
-    private static let selectionTextColor = Colors.textColor4
-    private static let textColor = Colors.textColor2
-    private static let todayBackgroundColor = Colors.selectionColor2
-    private static let todayTextColor = Colors.selectionColor1
+    private static let highlightBackgroundColor = Colors.text2
+    private static let selectionBackgroundColor = Colors.selection1
+    private static let selectionTextColor = Colors.text4
+    private static let textColor = Colors.text2
+    private static let todayBackgroundColor = Colors.selection2
+    private static let todayTextColor = Colors.selection1
     
     private static func eventIndicatorColor(for eventCount: Int) -> UIColor {
         let alpha = CGFloat(min(eventCount, eventIndicatorColorLevels)) / CGFloat(eventIndicatorColorLevels)

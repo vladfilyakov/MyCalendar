@@ -17,9 +17,9 @@ class CalendarHeaderView: UIView {
     
     private static let dayLabelFont = UIFont.preferredFont(forTextStyle: .caption1)
 
-    private static let dayLabelBackgroundColor = Colors.backgroundColor1
-    private static let dayLabelTextColor = Colors.textColor2
-    private static let separatorColor = Colors.transparentSeparatorColor
+    private static let dayLabelBackgroundColor = Colors.background1
+    private static let dayLabelTextColor = Colors.text2
+    private static let separatorColor = Colors.transparentSeparator
 
     override init(frame: CGRect) {
         super.init(frame: frame)

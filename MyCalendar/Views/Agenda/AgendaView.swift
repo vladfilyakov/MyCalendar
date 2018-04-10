@@ -25,10 +25,10 @@ class AgendaView: UIView {
     private static let sectionHeaderHeight: CGFloat = 26
     
     private static let sectionHeaderFont = UIFont.preferredFont(forTextStyle: .subheadline)
-    private static let sectionHeaderBackgroundColor = Colors.backgroundColor2
-    private static let sectionHeaderTextColor = Colors.textColor2
-    private static let sectionHeaderTodayBackgroundColor = Colors.selectionColor2
-    private static let sectionHeaderTodayTextColor = Colors.selectionColor1
+    private static let sectionHeaderBackgroundColor = Colors.background2
+    private static let sectionHeaderTextColor = Colors.text2
+    private static let sectionHeaderTodayBackgroundColor = Colors.selection2
+    private static let sectionHeaderTodayTextColor = Colors.selection1
     
     init(minDate: Date, maxDate: Date) {
         self.minDate = Calendar.current.startOfDay(for: minDate)
@@ -55,7 +55,7 @@ class AgendaView: UIView {
         eventView.estimatedSectionHeaderHeight = 0
         eventView.scrollsToTop = false
         eventView.sectionHeaderHeight = AgendaView.sectionHeaderHeight
-        eventView.separatorColor = Colors.separatorColor
+        eventView.separatorColor = Colors.separator
         eventView.separatorInset = .zero
         eventView.showsVerticalScrollIndicator = false
         eventView.dataSource = self
