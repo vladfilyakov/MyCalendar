@@ -22,9 +22,8 @@ class AgendaCell: UITableViewCell {
     private static let separatorThickness = UIScreen.main.devicePixel
     private static let subjectNumberOfLines = 2
     private static let timeContainerSpacing: CGFloat = 4
-    // TODO: Calculate wider width for Large Text
-    private static let timeContainerWidth: CGFloat = 70
-    
+    private static let timeContainerWidth: CGFloat = max(70, 5 * startFont.pointSize)
+
     private static let durationFont = UIFont.preferredFont(forTextStyle: .caption1)
     private static let locationFont = UIFont.preferredFont(forTextStyle: .footnote)
     private static let startFont = UIFont.preferredFont(forTextStyle: .caption1)
