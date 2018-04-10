@@ -130,10 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				A5B5A71F2077027700578966 /* Agenda */,
-				A592988E206A36AE005E1F4D /* CalendarDayView.swift */,
-				A592987E2064E220005E1F4D /* CalendarHeaderView.swift */,
-				A54A396D2063886200CA6EBD /* CalendarView.swift */,
-				A592987C2064DF7A005E1F4D /* CalendarWeekCell.swift */,
+				A5F87259207C39FF00D488E9 /* Calendar */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -184,6 +181,17 @@
 				A5B5A722207702DE00578966 /* EmptyAgendaCell.swift */,
 			);
 			path = Agenda;
+			sourceTree = "<group>";
+		};
+		A5F87259207C39FF00D488E9 /* Calendar */ = {
+			isa = PBXGroup;
+			children = (
+				A592988E206A36AE005E1F4D /* CalendarDayView.swift */,
+				A592987E2064E220005E1F4D /* CalendarHeaderView.swift */,
+				A54A396D2063886200CA6EBD /* CalendarView.swift */,
+				A592987C2064DF7A005E1F4D /* CalendarWeekCell.swift */,
+			);
+			path = Calendar;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
