@@ -15,9 +15,9 @@ class CalendarDayView: UIView {
     private static let eventIndicatorRadius: CGFloat = 2
     private static let selectionIndicatorMargin: CGFloat = 5
     
-    private static let dayTextFont = UIFont.systemFont(ofSize: 17)
-    private static let monthTextFont = UIFont.systemFont(ofSize: 13)
-    private static let yearTextFont = UIFont.systemFont(ofSize: 13)
+    private static let dayTextFont = UIFont.preferredFont(forTextStyle: .body)
+    private static let monthTextFont = UIFont.preferredFont(forTextStyle: .footnote)
+    private static let yearTextFont = UIFont.preferredFont(forTextStyle: .footnote)
 
     private static let oddMonthBackgroundColor = Colors.backgroundColor2
     private static let evenMonthBackgroundColor = Colors.backgroundColor1

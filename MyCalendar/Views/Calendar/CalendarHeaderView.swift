@@ -15,7 +15,7 @@ class CalendarHeaderView: UIView {
     }
     private static let separatorThickness = UIScreen.main.devicePixel
     
-    private static let dayLabelFont = UIFont.systemFont(ofSize: 12)
+    private static let dayLabelFont = UIFont.preferredFont(forTextStyle: .caption1)
 
     private static let dayLabelBackgroundColor = Colors.backgroundColor1
     private static let dayLabelTextColor = Colors.textColor2
