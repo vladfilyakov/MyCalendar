@@ -20,17 +20,15 @@ protocol AgendaViewDelegate: class {
 // MARK: - AgendaView
 
 class AgendaView: UIView {
+    static let contentHorizontalMargin: CGFloat = 16
     // Outlook has a fixed agenda section header height
     private static let sectionHeaderHeight: CGFloat = 26
     
-    private static let selectedDateColor = UIColor(red: 0, green: 0.47, blue: 0.85, alpha: 1)
-    private static let separatorColor = UIColor(red: 0.88, green: 0.88, blue: 0.89, alpha: 1)
-    
     private static let sectionHeaderFont = UIFont.preferredFont(forTextStyle: .subheadline)
-    private static let sectionHeaderBackgroundColor = UIColor(red: 0.97, green: 0.97, blue: 0.98, alpha: 1)
-    private static let sectionHeaderTextColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
-    private static let sectionHeaderTodayBackgroundColor = UIColor(red: 0.95, green: 0.98, blue: 0.99, alpha: 1)
-    private static let sectionHeaderTodayTextColor = selectedDateColor
+    private static let sectionHeaderBackgroundColor = Colors.backgroundColor2
+    private static let sectionHeaderTextColor = Colors.textColor2
+    private static let sectionHeaderTodayBackgroundColor = Colors.selectionColor2
+    private static let sectionHeaderTodayTextColor = Colors.selectionColor1
     
     init(minDate: Date, maxDate: Date) {
         self.minDate = Calendar.current.startOfDay(for: minDate)
@@ -57,7 +55,7 @@ class AgendaView: UIView {
         eventView.estimatedSectionHeaderHeight = 0
         eventView.scrollsToTop = false
         eventView.sectionHeaderHeight = AgendaView.sectionHeaderHeight
-        eventView.separatorColor = AgendaView.separatorColor
+        eventView.separatorColor = Colors.separatorColor
         eventView.separatorInset = .zero
         eventView.showsVerticalScrollIndicator = false
         eventView.dataSource = self

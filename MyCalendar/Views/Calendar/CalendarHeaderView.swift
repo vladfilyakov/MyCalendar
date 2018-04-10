@@ -9,19 +9,17 @@
 import UIKit
 
 class CalendarHeaderView: UIView {
-    //private static let dayLabelVerticalMargin: CGFloat = 6
     static var height: CGFloat {
         // Outlook has a fixed header height
-        //return 2 * dayLabelVerticalMargin + UIScreen.main.roundToDevicePixels(dayLabelFont.lineHeight) + separatorThickness
         return 26
     }
     private static let separatorThickness = UIScreen.main.devicePixel
     
     private static let dayLabelFont = UIFont.systemFont(ofSize: 12)
 
-    private static let dayLabelBackgroundColor = UIColor.white
-    private static let dayLabelTextColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
-    private static let separatorColor = UIColor(white: 0, alpha: 0.18)
+    private static let dayLabelBackgroundColor = Colors.backgroundColor1
+    private static let dayLabelTextColor = Colors.textColor2
+    private static let separatorColor = Colors.transparentSeparatorColor
 
     override init(frame: CGRect) {
         super.init(frame: frame)

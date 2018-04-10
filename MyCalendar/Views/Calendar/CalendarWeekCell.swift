@@ -19,12 +19,9 @@ class CalendarWeekCell: UITableViewCell {
     
     static var height: CGFloat {
         // Outlook has a fixed cell height
-        //return CalendarDayView.height + separatorThickness
         return 48
     }
     static let separatorThickness = UIScreen.main.devicePixel
-
-    static let separatorColor = UIColor(red: 0.88, green: 0.88, blue: 0.89, alpha: 1)
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

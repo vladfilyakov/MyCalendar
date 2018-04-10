@@ -11,11 +11,6 @@ import UIKit
 class CalendarDayView: UIView {
     private static let showEventIndicatorAnimationDuration: TimeInterval = 0.2
     
-//    private static let dayTextVerticalMargin: CGFloat = 14
-//    static var height: CGFloat {
-//        // TODO: Support Large Fonts
-//        return UIScreen.main.roundToDevicePixels(2 * dayTextVerticalMargin + dayTextFont.lineHeight)
-//    }
     private static let eventIndicatorBottomMargin: CGFloat = 7
     private static let eventIndicatorRadius: CGFloat = 2
     private static let selectionIndicatorMargin: CGFloat = 5
@@ -23,19 +18,17 @@ class CalendarDayView: UIView {
     private static let dayTextFont = UIFont.systemFont(ofSize: 17)
     private static let monthTextFont = UIFont.systemFont(ofSize: 13)
     private static let yearTextFont = UIFont.systemFont(ofSize: 13)
-    
-    private static let selectedDateColor = UIColor(red: 0, green: 0.47, blue: 0.85, alpha: 1)
 
-    private static let oddMonthBackgroundColor = UIColor(red: 0.97, green: 0.97, blue: 0.98, alpha: 1)
-    private static let evenMonthBackgroundColor = UIColor.white
-    private static let eventIndicatorColor = textColor
+    private static let oddMonthBackgroundColor = Colors.backgroundColor2
+    private static let evenMonthBackgroundColor = Colors.backgroundColor1
+    private static let eventIndicatorColor = Colors.textColor2
     private static let eventIndicatorColorLevels = 4
-    private static let highlightBackgroundColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
-    private static let selectionBackgroundColor = selectedDateColor
-    private static let selectionTextColor = UIColor.white
-    private static let textColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
-    private static let todayBackgroundColor = UIColor(red: 0.95, green: 0.98, blue: 0.99, alpha: 1)
-    private static let todayTextColor = selectedDateColor
+    private static let highlightBackgroundColor = Colors.textColor2
+    private static let selectionBackgroundColor = Colors.selectionColor1
+    private static let selectionTextColor = Colors.textColor4
+    private static let textColor = Colors.textColor2
+    private static let todayBackgroundColor = Colors.selectionColor2
+    private static let todayTextColor = Colors.selectionColor1
     
     private static func eventIndicatorColor(for eventCount: Int) -> UIColor {
         let alpha = CGFloat(min(eventCount, eventIndicatorColorLevels)) / CGFloat(eventIndicatorColorLevels)

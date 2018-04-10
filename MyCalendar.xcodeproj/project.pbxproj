@@ -27,6 +27,7 @@
 		A5DFCB5B206B65960093D9F2 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5DFCB5A206B65960093D9F2 /* UIView+Extension.swift */; };
 		A5F2E527206F4E7900106F71 /* AgendaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F2E526206F4E7900106F71 /* AgendaCell.swift */; };
 		A5F87258207B47A000D488E9 /* AgendaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F87257207B47A000D488E9 /* AgendaView.swift */; };
+		A5F8725B207C3D6A00D488E9 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F8725A207C3D6A00D488E9 /* Colors.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 		A5DFCB5A206B65960093D9F2 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		A5F2E526206F4E7900106F71 /* AgendaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgendaCell.swift; sourceTree = "<group>"; };
 		A5F87257207B47A000D488E9 /* AgendaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgendaView.swift; sourceTree = "<group>"; };
+		A5F8725A207C3D6A00D488E9 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +133,7 @@
 			children = (
 				A5B5A71F2077027700578966 /* Agenda */,
 				A5F87259207C39FF00D488E9 /* Calendar */,
+				A5F8725A207C3D6A00D488E9 /* Colors.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -300,6 +303,7 @@
 				A5F2E527206F4E7900106F71 /* AgendaCell.swift in Sources */,
 				A59298842064ED07005E1F4D /* Calendar+Extension.swift in Sources */,
 				A592988B20663589005E1F4D /* UIScreen+Extension.swift in Sources */,
+				A5F8725B207C3D6A00D488E9 /* Colors.swift in Sources */,
 				A54A394F20637F6A00CA6EBD /* CalendarController.swift in Sources */,
 				A592987D2064DF7A005E1F4D /* CalendarWeekCell.swift in Sources */,
 				A5B5A721207702AF00578966 /* AgendaHeaderView.swift in Sources */,

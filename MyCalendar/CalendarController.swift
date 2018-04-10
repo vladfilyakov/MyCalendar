@@ -16,10 +16,8 @@ class CalendarController: UIViewController {
     private static let calendarViewNormalWeeks = 2
     private static let calendarViewExpandedWeeks = 5
 
-    private static let selectedDateColor = UIColor(red: 0, green: 0.47, blue: 0.85, alpha: 1)
-
     private static let titleFont = UIFont.boldSystemFont(ofSize: 17)
-    private static let titleTextColor = selectedDateColor
+    private static let titleTextColor = Colors.selectionColor1
 
     private(set) lazy var titleView: UILabel = {
         let titleView = UILabel()
@@ -95,7 +93,7 @@ class CalendarController: UIViewController {
         
         let separator = UIView(frame: frame)
         separator.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
-        separator.backgroundColor = CalendarWeekCell.separatorColor
+        separator.backgroundColor = Colors.separatorColor
         separator.isUserInteractionEnabled = false
         return separator
     }

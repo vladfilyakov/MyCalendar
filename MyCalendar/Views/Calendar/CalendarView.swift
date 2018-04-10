@@ -77,7 +77,7 @@ class CalendarView: UIView {
         dayView.estimatedRowHeight = 0
         dayView.rowHeight = CalendarWeekCell.height
         dayView.scrollsToTop = false
-        dayView.separatorColor = CalendarWeekCell.separatorColor
+        dayView.separatorColor = Colors.separatorColor
         dayView.separatorInset = .zero
         dayView.showsVerticalScrollIndicator = false
         dayView.dataSource = self
